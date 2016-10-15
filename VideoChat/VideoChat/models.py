@@ -1,7 +1,8 @@
 from django.db import models
-from django import forms
 
-
+class UploadFileModel(models.Model):
+  video_file = models.FileField(upload_to='videos/%Y/%m/%d/')
+  
 class Video(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
