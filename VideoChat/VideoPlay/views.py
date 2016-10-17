@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+from VideoChat.models import Video
+
+def play():
+	
