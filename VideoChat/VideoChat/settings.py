@@ -31,7 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'VideoPlay.apps.VideoPlayConfig',
+    'Base',
+    'VideoPlay',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -9,3 +9,4 @@ class Video(models.Model):
     duration = models.FloatField()
     pub_date = models.DateTimeField('date published')
 
+

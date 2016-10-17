@@ -1,6 +1,5 @@
 from django.shortcuts import render
+from Base.models import Video
 
-from VideoChat.models import Video
-
-def play():
-	
+def play(request, video_id):
+	return render(request, 'reproductor.html')

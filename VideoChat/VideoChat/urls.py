@@ -20,3 +20,5 @@ urlpatterns = [
 	url(r'VideoPlay/', include('VideoPlay.urls')),
     url(r'^admin/', admin.site.urls),
 ]
+
+
