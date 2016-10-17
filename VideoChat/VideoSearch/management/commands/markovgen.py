@@ -1,4 +1,6 @@
 import random
+# http://agiliq.com/blog/2009/06/generating-pseudo-random-text-with-markov-chains-u/
+
 
 class Markov(object):
     def __init__(self, open_file):
