@@ -13,13 +13,7 @@ body {
     border-radius: 5px;
 }
 
-#botones{
-    float:left;
-    width: 100px;
-    height: 15px;
-}
-
-#barra{
+#bar{
     position: relative;
     float:left;
     width: 600px;
@@ -29,7 +23,7 @@ body {
     border:1px solid #CCCCCC;
 }
 
-#progreso{
+#progress{
     position: absolute;
     width: 0px;
     height: 8px;

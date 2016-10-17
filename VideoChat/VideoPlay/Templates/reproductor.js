@@ -1,47 +1,35 @@
-function iniciar(){
+function init(){
     maximo=600;
-    medio=document.getElementById('medio');
+    video=document.getElementById('video');
     reproducir=document.getElementById('reproducir');
-    barra=document.getElementById('barra');
-    progreso=document.getElementById('progreso');
+    bar=document.getElementById('bar');
+    progress=document.getElementById('progress');
 
-    reproducir.addEventListener('click',presionar,false);
-    barra.addEventListener('click',mover,false);
-}
-
-function presionar(){
-    if(!medio.paused && !medio.ended){
-        medio.pause();
-        reproducir.innerHTML='Play';
-        window.clearInterval(bucle);
-    } else {
-        medio.play();
-        reproducir.innerHTML= 'Pause';
-        bucle= setInterval(estado, 1000);
-    }
+    reproducir.addEventListener('click',push,false);
+    bar.addEventListener('click',move,false);
 }
 
 //Permite que la barra de progreso vaya aumentando de acuerdo a la canción
 function estado(){
-    if(!medio.ended){
-        var total = parseInt(medio.currentTime*maximo/medio.duration);
-        progreso.style.width=total+'px';
+    if(!video.ended){
+        var total = parseInt(video.currentTime*maximo/video.duration);
+        progress.style.width=total+'px';
     } else {
-        profreso.style.width='0px';
+        progress.style.width='0px';
         reproducir.innerHTML='Play';
-        window.clearInterval(bucle);
+        window.clearInterval(loop);
     }
 }
 
-//Adelantar o retrasar el videp
-function mover(e){
-    if(!medio.paused &&!medio.ended){
-        var ratonX=e.pageX-barra.offsetLeft;
-        var nuevoTiempo=ratonX*medio.duration/maximo;
-        medio.currentTime=nuevoTiempo;
-        progreso.style.width=ratonX+'px';
+//Adelantar o retrasar el video
+function move(e){
+    if(!video.paused &&!video.ended){
+        var ratonX=e.pageX-bar.offsetLeft;
+        var nuevoTiempo=ratonX*video.duration/maximo;
+        video.currentTime=nuevoTiempo;
+        progress.style.width=ratonX+'px';
     }
 }
 
-window.addEventListener('load',iniciar,false);
+window.addEventListener('load',init,false);
 
