@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from Base.models import Video
 
 def play(request, video_id):
-	return render(request, 'reproductor.html')
+	video = get_object_or_404(Video, pk=video_id)
+	return render(request, 'reproductor.html', {'video': video})
