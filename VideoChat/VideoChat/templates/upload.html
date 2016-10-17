@@ -8,12 +8,11 @@
       <!-- Upload form. Note enctype attribute! -->
       <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <p>{{ form.non_field_errors }}</p>
-          <p>{{ form.video_file.label_tag }} {{ form.video_file.help_text }}</p>
-          <p>
-              {{ form.video_file.errors }}
-              {{ form.video_file }}
-          </p>
+          <p>Title</p>
+          {{ form.title }}
+          <p>Description</p>
+          {{ form.description }}
+          <p>{{ form.video_file }}</p>
           <p><input type="submit" value="Upload" /></p>
       </form>
   </body>
