@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
 	# Example : /VideoPlay/35
-	url(r'^(?P<video_id>[0-9]+)/$', TemplateView.as_view(template_name="reproductor.html"), name='play'),
+	url(r'^(?P<video_id>[0-9]+)/$', views.play, name='play'),
 ]
