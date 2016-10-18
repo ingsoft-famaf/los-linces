@@ -6,14 +6,13 @@ from Base.models import Video
 
 
 class Command(BaseCommand):
-    help = "My shiny new management command."
     videos = []
 
     def add_arguments(self, parser):
         parser.add_argument('count', nargs=1, type=int)
 
     def handle(self, *args, **options):
-        print("Hi")
+        print("Creating dummy data...")
         self.clear()
         self.make_videos(options)
 
