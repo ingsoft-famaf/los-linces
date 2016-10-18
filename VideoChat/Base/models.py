@@ -32,3 +32,11 @@ class Video(models.Model):
                 'duration': {'type': 'float', 'index': 'no'}
             }
         }
+
+    def es_repr(self):
+        data = {}
+        mapping = self._meta.es_mapping
+        data['_id'] = self.pk
+        for field_name in mapping['properties'].keys():
+            data[field_name] = getattr(self, field_name)
+        return data
