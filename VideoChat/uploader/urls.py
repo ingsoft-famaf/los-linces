@@ -20,6 +20,5 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-# Should upload/ url include another app.views?
     url(r'^$', views.upload, name='upload'),
 ]

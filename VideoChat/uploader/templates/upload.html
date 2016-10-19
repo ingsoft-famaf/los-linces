@@ -6,6 +6,7 @@
   </head>
   <body>
       <!-- Upload form. Note enctype attribute! -->
+      <p>lala</p>
       <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <p>Title</p>
@@ -13,6 +14,11 @@
           <p>Description</p>
           {{ form.description }}
           <p>{{ form.video_file }}</p>
+
+          {% for error in form.errors %}
+            {{ error }}
+          {% endfor %}
+
           <p><input type="submit" value="Upload" /></p>
       </form>
   </body>
