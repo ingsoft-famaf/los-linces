@@ -1,12 +1,10 @@
-from django.core.exceptions import ValidationError
-from django.http import HttpResponse
+from haystack.management.commands import update_index
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 
 from uploader.forms import UploadFileForm
 from VideoChat.models import Video
 
-import magic
 
 def upload(request):
     if request.method == 'POST':
@@ -18,6 +16,7 @@ def upload(request):
                 path=request.FILES['video_file'],
                 )
             upload_model.save()
+            update_index.Command().handle()
             return HttpResponseRedirect('/success/upload')
         return render(request, 'upload.html', {'form': form})
 
