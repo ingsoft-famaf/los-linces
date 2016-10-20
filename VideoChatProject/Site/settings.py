@@ -38,8 +38,6 @@ STATIC_ROOT = os.path.abspath("VideoPlay/static")
 # Application definition
 
 INSTALLED_APPS = [
-    'Base',
-    'VideoPlay',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

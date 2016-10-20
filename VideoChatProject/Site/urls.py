@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^upload/', include('uploader.urls')),
     url(r'^search/', include('haystack.urls')),
+    url(r'^play/', include('VideoChat.urls')),
 ]
