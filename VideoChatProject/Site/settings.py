@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
+from elasticsearch import Elasticsearch, RequestsHttpConnection
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'VideoChat',
+    'haystack',
     'uploader',
 ]
 
@@ -54,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'VideoChat.urls'
+ROOT_URLCONF = 'Site.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'VideoChat.wsgi.application'
+WSGI_APPLICATION = 'Site.wsgi.application'
 
 
 # Database
@@ -123,3 +125,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
