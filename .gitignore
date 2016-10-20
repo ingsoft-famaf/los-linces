@@ -90,3 +90,10 @@ ENV/
 
 # PyCharm
 .idea/
+
+# virtualenv
+bin/
+include/
+pip-selfcheck.json
+VideoChat/migrations/
+db.sqlite3
