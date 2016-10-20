@@ -16,7 +16,6 @@ def upload(request):
                 title=form.cleaned_data['title'],
                 description=form.cleaned_data['description'],
                 path=request.FILES['video_file'],
-                duration=2.5,
                 )
             upload_model.save()
             return HttpResponseRedirect('/success/upload')

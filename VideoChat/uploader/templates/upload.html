@@ -6,20 +6,20 @@
   </head>
   <body>
       <!-- Upload form. Note enctype attribute! -->
-      <p>lala</p>
       <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <p>Title</p>
-          {{ form.title }}
-          <p>Description</p>
-          {{ form.description }}
-          <p>{{ form.video_file }}</p>
-
-          {% for error in form.errors %}
-            {{ error }}
+          {% for field in form %}
+            <p>{{ field.label_tag }}</p>
+            <p>{{ field }}</p>
+            {% if field.errors %}
+              <ul>
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
           {% endfor %}
-
-          <p><input type="submit" value="Upload" /></p>
+          <input type="submit" value="Upload" />
       </form>
   </body>
 </html> 
