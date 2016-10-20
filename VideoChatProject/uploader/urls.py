@@ -19,7 +19,7 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-	url(r'VideoPlay/', include('VideoPlay.urls')),
+	url(r'play/', include('VideoChat.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.upload, name='upload'),
 ]

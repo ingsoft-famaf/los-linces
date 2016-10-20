@@ -3,4 +3,4 @@ from .models import Video
 
 def play(request, video_id):
 	video = get_object_or_404(Video, pk=video_id)
-	return render(request, 'reproductor.html', {'video': video})
+	return render(request, 'VideoChat/reproductor.html', {'video': video})

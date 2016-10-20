@@ -16,7 +16,7 @@ def upload(request):
                 path=request.FILES['video_file'],
                 )
             upload_model.save()
-            update_index.Command().handle()
+            #update_index.Command().handle()
             return HttpResponseRedirect('/success/upload')
         return render(request, 'upload.html', {'form': form})
 

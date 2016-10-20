@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -29,11 +31,6 @@ SECRET_KEY = 'o)a1=m!vxxmn%$cug8lda=z^&0)4cyl6h1dtr6lj0wq+)%^3$#'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-STATIC_URL = '/static/'
-
-
-STATIC_ROOT = os.path.abspath("VideoPlay/static")
 
 # Application definition
 
@@ -127,8 +124,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
 
 HAYSTACK_CONNECTIONS = {
     'default': {

@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   {% load staticfiles %}
-  <link rel="stylesheet" href={% static "reproductor.css" %}>
+  <link rel="stylesheet" href="{% static "reproductor.css" %}">
 	<script src="{% static "reproductor.js" %}"></script>
   <title>mi reproductor</title>
 </head>
 <body>
   <section id="Play">
   	{% load staticfiles %}
-    <video id="video" width="700" heigth="500" src = {% static holamamdakjd%} controls>
+    <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls>
     </video>
     <nav>
       <div id="bar">
