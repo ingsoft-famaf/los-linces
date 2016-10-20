@@ -2,7 +2,7 @@ from model_mommy import mommy
 from django.core.management.base import BaseCommand
 from . import markovgen
 import os
-from VideoChat.models import Video
+from .models import Video
 
 
 class Command(BaseCommand):
@@ -13,7 +13,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("Creating dummy data...")
-        self.clear()
         self.make_videos(options)
 
     def make_videos(self, options):

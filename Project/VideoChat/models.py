@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 
 class Video(models.Model):
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.CharField(max_length=600)
     path = models.CharField(max_length=200)
     duration = models.FloatField(validators=[MinValueValidator(0)])
     pub_date = models.DateTimeField('date published')
