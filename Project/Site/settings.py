@@ -31,8 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'VideoSearch',
-    'Base',
+    'VideoChat',
+
+    'haystack',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'VideoChat.urls'
+ROOT_URLCONF = 'Site.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'VideoChat.wsgi.application'
+WSGI_APPLICATION = 'Site.wsgi.application'
 
 
 # Database
@@ -121,7 +123,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ES_CLIENT = Elasticsearch(
-    ['http://127.0.0.1:9200/'],
-    connection_class=RequestsHttpConnection
-)
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}

@@ -2,7 +2,7 @@ from model_mommy import mommy
 from django.core.management.base import BaseCommand
 from . import markovgen
 import os
-from Base.models import Video
+from VideoChat.models import Video
 
 
 class Command(BaseCommand):
@@ -17,7 +17,7 @@ class Command(BaseCommand):
         self.make_videos(options)
 
     def make_videos(self, options):
-        f = open(os.path.abspath("VideoSearch/management/commands/source"))
+        f = open(os.path.abspath("VideoChat/management/commands/source"))
         markov = markovgen.Markov(f)
         for _ in range(options.get('count')[0]):
             video_title = markov.generate_markov_text(10)
