@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  {% load staticfiles %}
+  <link rel="stylesheet" href={% static "reproductor.css" %}>
+	<script src="{% static "reproductor.js" %}"></script>
+  <title>mi reproductor</title>
+</head>
+<body>
+  <section id="Play">
+  	{% load staticfiles %}
+    <video id="video" width="700" heigth="500" src = {% static holamamdakjd%} controls>
+    </video>
+    <nav>
+      <div id="bar">
+          <div id="progress"></div>
+      </div>
+      
+    </nav>
+  </section>
+</body>
+</html>
