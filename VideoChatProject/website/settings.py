@@ -19,7 +19,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'website/../static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
+
+STATICFILES_DIRS = ('static', os.path.join(BASE_DIR, 'static/'))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -58,11 +62,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'website.urls'
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(PROJECT_ROOT, 'website/../templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
