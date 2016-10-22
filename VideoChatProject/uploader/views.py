@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 
 from uploader.forms import UploadFileForm
-from VideoChat.models import Video
+from videochat.models import Video
 
 
 def upload(request):

@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^upload/', include('uploader.urls')),
     url(r'^search/', include('haystack.urls')),
-    url(r'^play/', include('VideoChat.urls')),
+    url(r'^play/', include('videochat.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -16,7 +16,7 @@ class Command(BaseCommand):
         self.make_videos(options)
 
     def make_videos(self, options):
-        f = open(os.path.abspath("VideoChat/management/commands/source"))
+        f = open(os.path.abspath("videochat/management/commands/source"))
         markov = markovgen.Markov(f)
         for _ in range(options.get('count')[0]):
             video_title = markov.generate_markov_text(10)
