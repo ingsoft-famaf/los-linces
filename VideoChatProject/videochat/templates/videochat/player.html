@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static "player.css" %}">
+<script src="{% static "player.js" %}"></script>
+
+{% block title %}video.title{% endblock %}
+
+{% block body_block %}
+    <div class="container text-center">
+    <hr>
+        <section id="reproductor">
+            {% load static %}
+            <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls>
+            </video>
+            <nav>
+                <div id="bar">
+                  <div id="progress"></div>
+                </div>
+            </nav>
+        </section>
+    </div>
+{% endblock %}
+
