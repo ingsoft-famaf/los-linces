@@ -1,0 +1,74 @@
+<div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+        {% load static %}
+
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="{% url 'index' %}">
+                    <img src="{% static "/img/logo.png" %}" alt="VideoChat logo" class="hidden-xs hidden-sm"/>
+                    <img src="{% static "/img/logo-small.png" %}" alt="VideoChat logo" class="visible-xs visible-sm">
+                    <span class="sr-only">VideoChat - Go to homepage</span>
+
+                </a>
+
+
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                </div>
+                <div id="search-outer-sm"  class="visible-sm">
+                    <form id="search-form" role="search" method="get" action="search">
+                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                    <button id="search-submit" type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div id="search-outer"  class="hidden-xs hidden-sm">
+                    <form id="search-form" role="search" method="get" action="search">
+                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                    <button id="search-submit" type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+               <div id="search-outer-xs"  class="visible-xs">
+                    <form id="search-form" role="search" method="get" action="search">
+                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                    <button id="search-submit" type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                    </form>
+               </div>
+
+            </div>
+
+            <div class="navbar-collapse collapse" id="navigation">
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="{% url 'uploader:index' %}">Upload <b></b></a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0)">My Profile <b></b></a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="collapse clearfix" id="search">
+
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+

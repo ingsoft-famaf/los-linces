@@ -1,25 +1,39 @@
-<!DOCTYPE html>
-<html>
-  <head>
-      <meta charset="utf-8">
-      <title>Upload your video!</title>   
-  </head>
-  <body>
-      <!-- Upload form. Note enctype attribute! -->
-      <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% for field in form %}
-            <p>{{ field.label_tag }}</p>
-            <p>{{ field }}</p>
-            {% if field.errors %}
-              <ul>
-                {% for error in field.errors %}
-                  <li>{{ error }}</li>
+{% extends 'base.html' %}
+{% block title %}
+Upload your video!
+{% endblock %}
+{% block body_block %}
+    <div id="heading-breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="heading text-center">
+                    <h2>Upload videos</h2>
+                </div>
+                <p class="lead text-center">Share your videos with the world</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form action="{% url 'uploader:index' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% for field in form %}
+                    <h4>{{ field.label_tag }}</h4>
+                    <h4>{{ field }}</h4>
+                    {% if field.errors %}
+                      <ul>
+                        {% for error in field.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+
                 {% endfor %}
-              </ul>
-            {% endif %}
-          {% endfor %}
-          <input type="submit" value="Upload" />
-      </form>
-  </body>
-</html> 
+            <input class="btn btn-lg btn-template-main" type="submit" value="Upload" />
+        </form>
+    </div>
+
+<!-- Upload form. Note enctype attribute! -->
+
+{% endblock %}
+

@@ -1,0 +1,36 @@
+#search-outer-xs {
+    margin-top: 13px;
+    padding-left: 150px;
+    padding-right: 80px;
+}
+
+#search-outer-sm {
+    padding-right: 80px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+}
+
+#search-outer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    width: 45%;
+}
+
+#search-input {
+    margin: 0;
+    flex: 1;
+}
+
+#search-submit {
+    margin: 0;
+}
+
+#search-form {
+    display: flex;
+    flex-grow: 1
+}

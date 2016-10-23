@@ -1,7 +1,10 @@
-
-{% block content %}
+{% extends 'base.html' %}
+{% block title %}
+    Search results
+{% endblock %}
+{% block body_block %}
     <h2>Search</h2>
-    <form method="get" action=".">
+    <   <form method="get" action=".">
         <input title='search' type="text" name="q">
         <button type="submit">Search</button>
 
