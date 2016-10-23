@@ -2,22 +2,60 @@
 {% block title %}
     Search results
 {% endblock %}
+{% load static %}
+{% load videochat_extras %}
 {% block body_block %}
-    <h2>Search</h2>
-    <   <form method="get" action=".">
-        <input title='search' type="text" name="q">
-        <button type="submit">Search</button>
+    <div id="heading-breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="heading text-center">
+                    <h2>Search videos</h2>
+                </div>
+                <p class="lead text-center">Find great videos, have fun</p>
+            </div>
+        </div>
+    </div>
 
-
+    <div class="container">
         {% if query %}
-            <h3>Results</h3>
+            {% with results=page.object_list|get_tuples %}
+                {% for tuple in results %}
+                    <div class="col-md-12">
+                        <div class="row">
+                            {% for result in tuple %}
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="box-image-text blog">
+                                        <div class="top">
+                                            <div class="image">
+                                                <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
+                                            </div>
 
-            {% for result in page.object_list %}
-                <h3>{{ result.object.title }}</h3>
-                <p>{{ result.object.description }}</p>
-            {% empty %}
-                <p>No results found.</p>
-            {% endfor %}
+                                            <div class="bg"></div>
+
+                                            <div class="text">
+                                                <p class="buttons">
+                                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <h4><a href="#">{{ result.object.title }}</a></h4>
+
+                                            <p class="author-category">By <a href="#">John Snow</a>
+                                            </p>
+
+                                            <p class="intro">{{ result.object.description }}</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p>No results found.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endwith %}
 
             {% if page.has_previous or page.has_next %}
                 <div>
@@ -27,7 +65,6 @@
                 </div>
             {% endif %}
         {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
-    </form>
+    </div>
 {% endblock %}
