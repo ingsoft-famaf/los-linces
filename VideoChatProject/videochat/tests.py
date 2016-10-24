@@ -13,7 +13,7 @@ class VideoPlayMethodTest(TestCase):
 		#authenticate(username=user.username, password=user.password)
 		video = Video(title= "Primer video", description= "probando", path="/media/videos/2016/10/20/sample4")
 		video.save()
-		videopk = video.pk
+		videopk = video.pk + 1
 		url = 'http://localhost:8000/play/v/videopk'
 		request = request_factory.get(url)
 		response = play(request, videopk)
