@@ -20,6 +20,9 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+    url(r'^login/', views.login_view, name="login_view"),
+    url('^', include('django.contrib.auth.urls')),
+    url(r'^register/', views.register_view, name='register_view'),
     url(r'^admin/', admin.site.urls),
     url(r'^upload/', include('uploader.urls')),
     url(r'^search/', include('haystack.urls')),

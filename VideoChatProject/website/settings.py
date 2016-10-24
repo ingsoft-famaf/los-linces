@@ -19,10 +19,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/login/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'website/../static/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
-
-STATICFILES_DIRS = ('static', os.path.join(BASE_DIR, 'static/'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -112,6 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Use Django's default AUTH_USER_MODEL
+AUTH_USER_MODEL = 'auth.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
