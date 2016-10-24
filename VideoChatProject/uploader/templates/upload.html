@@ -13,9 +13,13 @@ Upload your video!
             </div>
         </div>
     </div>
-
     <div class="container">
-        <form action="{% url 'uploader:index' %}" method="post" enctype="multipart/form-data">
+        {% if alert %}
+            {% ifequal alert 'success' %}
+                <div class="alert alert-success" role="alert">Well done! You successfully uploaded a video.</div>
+            {% endifequal %}
+        {% else %}
+            <form action="{% url 'uploader:index' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
                 {% for field in form %}
                     <h4>{{ field.label_tag }}</h4>
@@ -31,6 +35,7 @@ Upload your video!
                 {% endfor %}
             <input class="btn btn-lg btn-template-main" type="submit" value="Upload" />
         </form>
+        {% endif %}
     </div>
 
 <!-- Upload form. Note enctype attribute! -->

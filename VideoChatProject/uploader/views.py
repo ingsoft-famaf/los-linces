@@ -17,9 +17,9 @@ def upload(request):
                 )
             upload_model.save()
             #update_index.Command().handle()
-            return HttpResponseRedirect('/success/upload')
-        return render(request, 'upload.html', {'form': form})
 
+            return render(request, 'upload.html', {'alert': 'success'})
+        return render(request, 'upload.html', {'form': form})
     else:
         form = UploadFileForm()
         return render(request, 'upload.html', {'form': form})
