@@ -5,5 +5,6 @@ app_name = 'videochat'
 
 urlpatterns = [
     # ... the rest of your URLconf goes here ...
-    url(r'^(?P<video_id>[0-9]+)/$', views.play, name='play'),
+    url(r'^u/(?P<user_id>[0-9]+)/$', views.user, name='user'),
+    url(r'^v/(?P<video_id>[0-9]+)/$', views.play, name='play'),
 ]
