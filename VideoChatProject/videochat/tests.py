@@ -17,6 +17,6 @@ class VideoPlayMethodTest(TestCase):
 		url = 'http://localhost:8000/play/v/videopk'
 		request = request_factory.get(url)
 		response = play(request, videopk)
-		self.assertIs(videopk,404)
+		self.assertIs(response.status_code,404)
 
 	
