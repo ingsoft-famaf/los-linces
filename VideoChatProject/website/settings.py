@@ -24,6 +24,7 @@ LOGIN_URL = '/login/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'website/../static/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
 
+STATICFILES_DIRS = ('static', os.path.join(BASE_DIR, 'static/'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
