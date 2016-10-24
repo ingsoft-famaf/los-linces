@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+Register!
+{% endblock %}
+{% block body_block %}
+    <div id="heading-breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="heading text-center">
+                    <h2>Register</h2>
+                </div>
+                <p class="lead text-center">Share your videos with the world</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form action="{% url 'register_view' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                {% for field in form %}
+                    <h4>{{ field.label_tag }}</h4>
+                    <h4>{{ field }}</h4>
+                    {% if field.errors %}
+                      <ul>
+                        {% for error in field.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                {% endfor %}
+
+            <input class="btn btn-lg btn-template-main" type="submit" value="Register" />
+        </form>
+    </div>
+
+<!-- Upload form. Note enctype attribute! -->
+
+{% endblock %}
+
