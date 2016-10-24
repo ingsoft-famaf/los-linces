@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     'videochat',
     'haystack',
+    'friendship',
     'uploader',
 ]
 

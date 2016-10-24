@@ -1,6 +1,8 @@
 #search-outer-xs {
     margin-top: 13px;
     padding-left: 150px;
+      z-index:1;
+
     padding-right: 80px;
 }
 
@@ -11,6 +13,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 50%;
+      z-index:1;
+
 }
 
 #search-outer {
@@ -19,6 +23,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
     width: 45%;
+  z-index:1;
 }
 
 #search-input {
@@ -33,4 +38,18 @@
 #search-form {
     display: flex;
     flex-grow: 1
+}
+
+.button-group {
+    text-align: center;
+    height: 33px;
+    display: flex;
+    float: left;
+}
+
+.button-group-xs {
+    text-align: center;
+    height: 34px;
+    display: flex;
+    float: left;
 }
