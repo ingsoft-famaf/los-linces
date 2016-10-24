@@ -20,7 +20,7 @@ def upload(request):
                 author=user,
                 )
             upload_model.save()
-            #update_index.Command().handle()
+            update_index.Command().handle()
 
             return render(request, 'upload.html', {'alert': 'success'})
         return render(request, 'upload.html', {'form': form})

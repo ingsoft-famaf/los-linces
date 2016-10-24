@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^upload/', include('uploader.urls')),
     url(r'^search/', include('haystack.urls')),
     url(r'^play/', include('videochat.urls')),
+    url(r'^user/', include('videochat.urls')),
     url(r'^$', views.index, name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
