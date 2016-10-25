@@ -19,4 +19,13 @@ class VideoPlayMethodTest(TestCase):
 		response = play(request, videopk)
 		self.assertIs(response.status_code,404)
 
-	
+	def _202_tests(self):
+		
+		request_factory = RequestFactory()
+		url = 'http://localhost:8000/play/v/videopk'
+		request = request_factory.get(url)
+		video = Video(title= "Primer video", description= "probando", path="/media/videos/2016/10/20/sample4")
+		video.save()
+		videopk = video.pk
+		#response = play(request, videopk)
+		self.assertIs(response.status_code,202)
