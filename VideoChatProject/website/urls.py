@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^play/', include('videochat.urls')),
     url(r'^user/', include('videochat.urls')),
     url(r'^$', views.index, name='index'),
+    # Python Social Auth URLs
+url('', include('social.apps.django_app.urls', namespace='social')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
