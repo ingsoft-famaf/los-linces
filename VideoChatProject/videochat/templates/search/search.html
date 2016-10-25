@@ -115,11 +115,11 @@
                                 <div class="col-md-2 col-sm-3">
                                     <div class="team-member" data-animate="fadeInDown">
                                         <div class="image">
-                                            <a href="#">
+                                            <a href="{% url 'videochat:u' result.object.pk %}">
                                                 <img src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive img-circle">
                                             </a>
                                         </div>
-                                        <h3><a href="#">{{ result.object.username }}</a></h3>
+                                        <h3><a href="{% url 'videochat:u' result.object.pk %}">{{ result.object.username }}</a></h3>
                                         <button id="{{ result.object.pk }}" onclick="change({{ result.object.pk }})" type="button" class="btn btn-lg btn-success">Add friend</button>
                                     </div>
                                 </div>
