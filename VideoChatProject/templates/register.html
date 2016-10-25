@@ -1,19 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'outside_base.html' %}
 {% block title %}
-Register!
+ Sign up
 {% endblock %}
 {% block body_block %}
-    <div id="heading-breadcrumbs">
-        <div class="container">
-            <div class="row">
-                <div class="heading text-center">
-                    <h2>Register</h2>
-                </div>
-                <p class="lead text-center">Share your videos with the world</p>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
         <form action="{% url 'register_view' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -29,7 +18,7 @@ Register!
                     {% endif %}
                 {% endfor %}
 
-            <input class="btn btn-lg btn-template-main" type="submit" value="Register" />
+            <button type="submit" class="btn btn-template-main"><i class="fa fa-user"></i> Sign up</button>
         </form>
     </div>
 

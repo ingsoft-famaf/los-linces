@@ -3,10 +3,75 @@
 {% block title %} Perfil de {{ user.username }} {% endblock %}
 	
 {% block body_block %}
-	<div class="container">
-		<h1> Perfil de {{ user.username }}</h1>
+    {% load static %}
 
-		{{ user.username }} se llama {{ user.first_name }} {{ user.last_name}} y se unió a VideoChat el {{ user.date_joined }}
-		
+	<div class="container">
+        <div id="heading-breadcrumbs">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img style="height: 150px; width: 150px;" src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="heading text-center">
+                            <h2>{{ user.username }}</h2>
+                        </div>
+                        <p class="lead text-center">User since {{ user.date_joined }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+        <ul class="nav nav-pills nav-justified">
+            <li class="active"><a href="#tab2-1" data-toggle="tab">Personal information</a>
+            </li>
+            <li class=""><a href="#tab2-2" data-toggle="tab">Friend requests</a>
+            </li>
+            <li class=""><a href="#tab2-3" data-toggle="tab">Uploaded videos</a>
+            </li>
+            <li class=""><a href="#tab2-4" data-toggle="tab">Linked accounts</a>
+            </li>
+        </ul>
+        <div class="tab-content tab-content-inverse">
+            <div class="tab-pane active" id="tab2-1">
+                <h4>First name:</h4> {{ user.first_name }}
+                <h4>Last name:</h4> {{ user.last_name}}
+                <h4>Email account:</h4> {{ user.email}}
+            </div>
+            <!-- /.tab -->
+            <div class="tab-pane" id="tab2-2">
+                {% for frequest in friend_requests %}
+                    <ul>
+                        <li>{{ frequest }}</li>
+                    </ul>
+                {% endfor %}
+            </div>
+            <!-- /.tab -->
+            <div class="tab-pane" id="tab2-3">
+                <p>
+                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo
+                    enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown.
+                    Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed
+                    echo park.
+                </p>
+            </div>
+            <!-- /.tab -->
+            <div class="tab-pane" id="tab2-4">
+                <p>
+                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred
+                    vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan,
+                    sartorial keffiyeh echo park vegan.
+                </p>
+                <p>
+                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater
+                    eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+                </p>
+
+            </div>
+            <!-- /.tab -->
+        </div>
+    </div>
 	</div>
 {% endblock %}

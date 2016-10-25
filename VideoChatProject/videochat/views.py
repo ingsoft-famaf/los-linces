@@ -11,8 +11,12 @@ def play(request, video_id):
 
 def user(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
+
     if Friend.objects.are_friends(request.user, other_user) or (request.user == other_user):
-        return render(request, 'videochat/user.html', {'user': other_user})
+        friend_requests = Friend.objects.unread_requests(user=other_user)
+
+        return render(request, 'videochat/user.html', {'user': other_user,
+                                                       'friend_requests': friend_requests})
     else:
         return render(request, 'videochat/friend_request.html', {'user': other_user, 'me': request.user})
 

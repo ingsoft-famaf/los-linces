@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, logout, \
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import redirect, render, get_object_or_404
+from haystack.management.commands import update_index
 
 
 @login_required
@@ -16,7 +17,7 @@ def register_view(request):
             new_user = form.save()
             new_user = authenticate(username=form.cleaned_data['username'],
                                     password=form.cleaned_data['password1'],)
-
+            update_index.Command().handle()
             return redirect('/')
         else:
             return render(request, 'register.html', {'form': form})
