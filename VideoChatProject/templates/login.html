@@ -1,40 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'outside_base.html' %}
 {% block title %}
-Log in!
+   Share your videos with the world
 {% endblock %}
 {% block body_block %}
-    <div id="heading-breadcrumbs">
-        <div class="container">
-            <div class="row">
-                <div class="heading text-center">
-                    <h2>Log in</h2>
+    <div class="container">
+        <div class="home-carousel">
+                            <div class="dark-mask"></div>
+
+            <div class="container">
+                <div class="homepage owl-carousel">
+                    <div class="item">
+                        <div class="row">
+                            <div class="col-sm-5 right">
+                                <h1>Enjoy videos with friends</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <h2>Chat with <br> people who are watching the same video</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="row">
+                            <div class="col-sm-5 right">
+                                <h1>Meet great people, make friends</h1>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="lead text-center">Share your videos with the world</p>
+                <!-- /.project owl-slider -->
             </div>
         </div>
-    </div>
-
-    <div class="container">
-    {% if next %}
-      <form action="{% url 'login_view' %}?next={{ next }}" method="post" enctype="multipart/form-data">
-    {% else %}
-      <form action="{% url 'login_view' %}" method="post" enctype="multipart/form-data">
-    {% endif %}
-        {% csrf_token %}
-            {% for field in form %}
-                <h4>{{ field.label_tag }}</h4>
-                <h4>{{ field }}</h4>
-            {% endfor %}
-
-            {% if errors %}
-              <ul>
-                {% for error in errors %}
-                  <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-        <input class="btn btn-lg btn-template-main" type="submit" value="Log in" />
-      </form>
     </div>
 
 <!-- Upload form. Note enctype attribute! -->

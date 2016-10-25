@@ -19,58 +19,33 @@
                     </button>
                 </div>
                 <div id="search-outer-sm"  class="visible-sm">
-                    <div class="button-group">
-                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="fa fa-caret-down"></span></button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a href="#" class="small" data-value="videochat.video" tabIndex="-1"><input type="checkbox" />&nbsp;Videos</a>
-                        </li>
-                        <li>
-                          <a href="#" class="small" data-value="auth.user" tabIndex="-1"><input type="checkbox" />&nbsp;Users</a>
-                        </li>
-                      </ul>
-                    </div>
-
-
                     <form id="search-form" role="search" method="get" action="/search/">
-                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
-                    <button id="search-submit" type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                        <select class="search-select" name="models">
+                          <option value="videochat.video">Video</option>
+                          <option value="auth.user">User</option>
+                        </select>
+                        <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                        <button id="search-submit" type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
                 <div id="search-outer"  class="hidden-xs hidden-sm">
-                    <div class="button-group">
-                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span>Filters  </span><span class="fa fa-caret-down"></span></button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a href="#" class="small" data-value="videochat.video" tabIndex="-1"><input type="checkbox" />&nbsp;Videos</a>
-                        </li>
-                        <li>
-                          <a href="#" class="small" data-value="auth.user" tabIndex="-1"><input type="checkbox" />&nbsp;Users</a>
-                        </li>
-                      </ul>
-                    </div>
-
                     <form id="search-form" role="search" method="get" action="/search/">
-                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
-                    <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                       <select class="search-select" name="models">
+                          <option value="videochat.video">Video</option>
+                          <option value="auth.user">User</option>
+                        </select>
+                        <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                        <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
                <div id="search-outer-xs"  class="visible-xs">
-                    <div class="button-group-xs">
-                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="fa fa-caret-down"></span></button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a href="#" class="small" data-value="videochat.video" tabIndex="-1"><input type="checkbox" />&nbsp;Videos</a>
-                        </li>
-                        <li>
-                          <a href="#" class="small" data-value="auth.user" tabIndex="-1"><input type="checkbox" />&nbsp;Users</a>
-                        </li>
-                      </ul>
-                    </div>
-
                     <form id="search-form" role="search" method="get" action="/search/">
-                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
-                    <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+                       <select class="search-select" name="models">
+                          <option value="videochat.video">Video</option>
+                          <option value="auth.user">User</option>
+                        </select>
+                        <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                        <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
                     </form>
                </div>
 
@@ -80,17 +55,25 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="{% url 'uploader:index' %}">Upload <b></b></a>
+                        <a style="text-decoration: none;" href="{% url 'uploader:index' %}">Upload <b></b></a>
                     </li>
-                    <li>
-                        <a href="javascript: void(0)">My Profile <b></b></a>
-                    </li>
+                     <li class="dropdown">
+                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{% static "img/person-1.jpg" %}" alt="" class="img-small"></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'videochat:u' user.pk %}">My profile</a>
+                                </li>
+                                <li><a href="/logout/">Sign out</a>
+                                </li>
+                                <li><a href="#">Settings</a>
+                                </li>
+
+                            </ul>
+                     </li>
                 </ul>
 
             </div>
 
             <div class="collapse clearfix" id="search">
-
                 <form class="navbar-form" role="search">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search">

@@ -37,15 +37,11 @@
 
     <link href="{% static "/css/owl.carousel.css" %}" rel="stylesheet">
     <link href="{% static "/css/owl.theme.css" %}" rel="stylesheet">
-
     </head>
     <body>
-
-        {% include 'navbar.html' %}
-
         <div>
              <section class="bar background-gray no-mb">
-
+            {% include 'outside_topbar.html' %}
             {% block body_block %}
             {% endblock %}
 

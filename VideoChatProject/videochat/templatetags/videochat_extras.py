@@ -4,12 +4,13 @@ register = Library()
 
 
 @register.filter
-def get_tuples(lst):
+def get_tuples(value, arg):
+    lst = value
+    size = arg
     res = []
-    for e in lst:
-        print(e.object.title)
     while lst:
-        sl = lst[:4]
+        sl = lst[:size]
         res.append(tuple(sl))
-        lst = lst[4:]
+        lst = lst[size:]
     return res
+
