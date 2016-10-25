@@ -27,13 +27,16 @@
         <ul class="nav nav-pills nav-justified">
             <li class="active"><a href="#tab2-1" data-toggle="tab">Personal information</a>
             </li>
-            <li class=""><a href="#tab2-2" data-toggle="tab">Friend requests</a>
+             <li class=""><a href="#tab2-2" data-toggle="tab">Friend requests</a>
             </li>
-            <li class=""><a href="#tab2-3" data-toggle="tab">Uploaded videos</a>
+            <li class=""><a href="#tab2-3" data-toggle="tab">Friends</a>
             </li>
-            <li class=""><a href="#tab2-4" data-toggle="tab">Linked accounts</a>
+            <li class=""><a href="#tab2-4" data-toggle="tab">Uploaded videos</a>
+            </li>
+            <li class=""><a href="#tab2-5" data-toggle="tab">Linked accounts</a>
             </li>
         </ul>
+
         <div class="tab-content tab-content-inverse">
             <div class="tab-pane active" id="tab2-1">
                 <h4>First name:</h4> {{ user.first_name }}
@@ -44,18 +47,21 @@
             <div class="tab-pane" id="tab2-2">
                 {% for frequest in friend_requests %}
                     <ul>
-                        <li>{{ frequest }}</li>
+                        <li>{{ frequest.from_user }}  <a href="#">Aceptar solicitud</a></li>
                     </ul>
+                 {% empty %}
+                    <p>You don't have friend requests.</p>
                 {% endfor %}
             </div>
             <!-- /.tab -->
             <div class="tab-pane" id="tab2-3">
-                <p>
-                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo
-                    enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown.
-                    Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed
-                    echo park.
-                </p>
+                {% for friend in friends %}
+                    <ul>
+                        <li>{{ frequest.user }} </li>
+                    </ul>
+                {% empty %}
+                    <p>You don't have friends.</p>
+                {% endfor %}
             </div>
             <!-- /.tab -->
             <div class="tab-pane" id="tab2-4">

@@ -14,9 +14,10 @@ def user(request, user_id):
 
     if Friend.objects.are_friends(request.user, other_user) or (request.user == other_user):
         friend_requests = Friend.objects.unread_requests(user=other_user)
-
+        friends = Friend.objects.friends(user=other_user)
         return render(request, 'videochat/user.html', {'user': other_user,
-                                                       'friend_requests': friend_requests})
+                                                       'friend_requests': friend_requests,
+                                                       'friends': friends})
     else:
         return render(request, 'videochat/friend_request.html', {'user': other_user, 'me': request.user})
 
