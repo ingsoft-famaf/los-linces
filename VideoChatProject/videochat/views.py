@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Video
 from django.contrib.auth.models import User
-from friendship.models import Friend, Follow
+from friendship.models import Friend
 
 
 def play(request, video_id):
@@ -11,8 +11,7 @@ def play(request, video_id):
 
 def user(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
-    if(Friend.objects.are_friends(request.user, other_user) 
-    	or (request.user == other_user)):
-    	return render(request, 'videochat/user.html', {'user': other_user})
+    if Friend.objects.are_friends(request.user, other_user) or (request.user == other_user):
+        return render(request, 'videochat/user.html', {'user': other_user})
     else:
-    	return render(request, 'videochat/friend_request.html')
+        return render(request, 'videochat/friend_request.html')
