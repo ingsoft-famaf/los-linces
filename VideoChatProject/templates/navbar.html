@@ -58,9 +58,9 @@
                         <a style="text-decoration: none;" href="{% url 'uploader:index' %}">Upload <b></b></a>
                     </li>
                      <li class="dropdown">
-                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{% static "img/person-1.jpg" %}" alt="" class="img-small">
+                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{% static "img/person-1.jpg" %}" alt="" class="img-small"></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'videochat:user' user.pk %}">My profile</a>
+                                <li><a href="{% url 'videochat:u' user.pk %}">My profile</a>
                                 </li>
                                 <li><a href="contact2.html">Sign out</a>
                                 </li>
