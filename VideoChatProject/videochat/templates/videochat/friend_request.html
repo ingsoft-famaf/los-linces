@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Perfil de {{ user.username }} {% endblock %}
+	
+{% block body_block %}
+	<div class="container">
+
+		Actualmente no puedes acceder al perfil de {{ user.username }}, si quieres ver su información y actividad reciente, envíale una solicitud de amistad.
+		
+	</div>
+{% endblock %}
