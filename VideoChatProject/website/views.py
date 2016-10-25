@@ -10,6 +10,7 @@ from haystack.management.commands import update_index
 def index(request):
     return render(request, 'index.html', {})
 
+
 def register_view(request):
     if request.POST:
         form = UserCreationForm(request.POST)
@@ -25,6 +26,7 @@ def register_view(request):
     else:
         form = UserCreationForm()
         return render(request, 'register.html', {'form': form})
+
 
 def login_view(request):
     if request.POST:

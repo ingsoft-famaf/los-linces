@@ -18,9 +18,10 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from . import views
-
+from django.contrib.auth.views import logout
 urlpatterns = [
     url(r'^login/', views.login_view, name="login_view"),
+    url(r'^logout/', logout , {'next_page': '/'}),
     url('^', include('django.contrib.auth.urls')),
     url(r'^register/', views.register_view, name='register_view'),
     url(r'^admin/', admin.site.urls),
