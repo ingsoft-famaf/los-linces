@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Perfil de usuario{% endblock %}
-{% block body_block %}
-    <div class="container">
-        <h1>{{ user.username }}</h1>
-    </div>
-{% endblock %}
 
+{% block title %} Perfil de {{ user.username }} {% endblock %}
+	
+{% block body_block %}
+	<div class="container">
+		<h1> Perfil de {{ user.username }}</h1>
+
+		{{ user.username }} se llama {{ user.first_name }} {{ user.last_name}} y se unió a VideoChat el {{ user.date_joined }}
+		
+	</div>
+{% endblock %}
