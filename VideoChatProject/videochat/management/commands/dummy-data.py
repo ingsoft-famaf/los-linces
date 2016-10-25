@@ -40,7 +40,8 @@ class Command(BaseCommand):
             # video_title = markov.generate_markov_text(10)
             video_title = "sample " + str(i)
             video_description = markov.generate_markov_text(50)
-            video = mommy.make(Video, title=video_title, description=video_description)
+            video_path = "videos/2016/10/24/small.mp4"
+            video = mommy.make(Video, title=video_title, description=video_description, path=video_path)
 
             self.videos.append(video)
 
