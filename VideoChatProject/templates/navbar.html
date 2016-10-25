@@ -55,17 +55,25 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="{% url 'uploader:index' %}">Upload <b></b></a>
+                        <a style="text-decoration: none;" href="{% url 'uploader:index' %}">Upload <b></b></a>
                     </li>
-                    <li>
-                        <a href="javascript: void(0)">My Profile <b></b></a>
-                    </li>
+                     <li class="dropdown">
+                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{% static "img/person-1.jpg" %}" alt="" class="img-small">
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'videochat:user' user.pk %}">My profile</a>
+                                </li>
+                                <li><a href="contact2.html">Sign out</a>
+                                </li>
+                                <li><a href="contact3.html">Settings</a>
+                                </li>
+
+                            </ul>
+                     </li>
                 </ul>
 
             </div>
 
             <div class="collapse clearfix" id="search">
-
                 <form class="navbar-form" role="search">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search">

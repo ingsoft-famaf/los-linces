@@ -66,3 +66,12 @@ select {
     box-shadow: inset 1px 1px 2px #ddd8dc;
     background: #fff;
 }
+
+
+.img-small  {
+    border-radius:50%;
+    margin-left: 3px;
+    margin-top: -15px;
+    width: 45px;
+    height:45px;
+}
