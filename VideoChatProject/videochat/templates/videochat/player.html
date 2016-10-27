@@ -9,16 +9,45 @@
 {% block body_block %}
     <div class="container text-center">
     <hr>
-        <section id="reproductor">
-            {% load static %}
-            <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls>
-            </video>
-            <nav>
-                <div id="bar">
-                  <div id="progress"></div>
+    {% load static %}
+        <link href="{% static "/css/chat.css" %}" rel="stylesheet">
+            <div class="row">
+                <div class="col-md-8">
+                    <section id="reproductor">
+                        <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
+                        <nav>
+                            <div id="bar">
+                              <div id="progress"></div>
+                            </div>
+                        </nav>
+                    </section>
                 </div>
-            </nav>
-        </section>
+                <div class="col-md-4">
+                    <div class="container-fluid">
+                          <div class="panel panel-default">
+                                <div class="panel-heading">Chat</div>
+                                <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
+                                <ul class="list-group" id="output" style="text-align: left">
+                                    <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is a message </span></li>
+                                    <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is another message </span></li>
+                                    <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > And other </span></li>
+                                    <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > :D </span></li>
+                                </ul>
+                                <div class="panel-body">
+                                <form id="chat">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control" id="chat-input" />
+                                        <span style="padding-left: 1px" class="input-group-btn">
+                                            <button type="submit" class="btn btn-template-main">Send</button>
+                                        </span>
+                                    </div>
+                                </form>
+                                </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+
     </div>
 {% endblock %}
 
