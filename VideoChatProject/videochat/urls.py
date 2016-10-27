@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^ajax/add/$', ajax.add_friend),
     url(r'^u/(?P<user_id>[0-9]+)/$', views.user, name='u'),
     url(r'^v/(?P<video_id>[0-9]+)/$', views.play, name='v'),
+    url(r'^newchatmessage/$', views.newchatmessage, name='newchatmessage'),
 ]

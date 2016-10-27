@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Video
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from friendship.models import Friend
+
+from .models import Video, Message
 
 
 def play(request, video_id):
@@ -28,3 +32,25 @@ def friend(request, user_id):
         return render(request, 'videochat/request_sent.html', {'user': other_user})
     else:
         return render(request, 'videochat/user.html', {'user': other_user})
+
+@csrf_exempt
+@login_required
+def newchatmessage(request):
+    if not request.POST:
+        # Return HttpResponse with error
+        pass
+
+    try:
+        video = Video.objects.filter(pk=request.POST.get('videopk')).first()
+    except:
+        # Video does not exist
+        pass
+
+    message = Message(
+        text=request.POST.get('message'),
+        author=request.user,
+        video=video,
+        )
+    message.save()
+
+    return HttpResponse(request.POST.get('message'))
