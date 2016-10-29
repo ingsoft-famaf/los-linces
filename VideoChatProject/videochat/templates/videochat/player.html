@@ -35,6 +35,7 @@
                                 </ul>
                                 <div class="panel-body">
                                 <form id="chat">
+                                    {% csrf_token %}
                                     <div class="input-group">
                                     <input type="text" class="form-control" id="chat-input" />
                                         <span style="padding-left: 1px" class="input-group-btn">
@@ -52,7 +53,8 @@
                                       $.ajax({
                                         url: "/vc/newchatmessage/",
                                         method: "POST",
-                                        data: {'message': message, 'videopk': {{ video.pk }}}
+                                        data: {'message': message, 'videopk': {{ video.pk }},
+                                               'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
                                       }).done(function(data) {
                                         console.log(data)
                                       });

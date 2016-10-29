@@ -33,7 +33,6 @@ def friend(request, user_id):
     else:
         return render(request, 'videochat/user.html', {'user': other_user})
 
-@csrf_exempt
 @login_required
 def newchatmessage(request):
     if not request.POST:
