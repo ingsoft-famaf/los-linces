@@ -11,7 +11,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">
-                        <img style="height: 150px; width: 150px;" src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive">
+                        <img style="height: 150px; width: 150px;" src="{{ request.user.profile.image.url }}" alt="" class="img-responsive">
                     </div>
                     <div class="col-md-6">
                         <div class="heading text-center">
@@ -129,7 +129,7 @@
                                     <div class="team-member" data-animate="fadeInDown">
                                         <div class="image">
                                             <a href="{% url 'videochat:u' result.pk %}">
-                                                <img src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive img-circle">
+                                                <img src="{{ result.profile.image.url }}" alt="" class="img-responsive img-circle">
                                             </a>
                                         </div>
                                         <h3><a href="{% url 'videochat:u' result.pk %}">{{ result.username }}</a></h3>

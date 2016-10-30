@@ -131,7 +131,7 @@
                                     <div class="team-member" data-animate="fadeInDown">
                                         <div class="image">
                                             <a href="{% url 'videochat:u' result.object.pk %}">
-                                                <img src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive img-circle">
+                                                <img src="{{ result.object.profile.image.url }}" alt="" class="img-responsive img-circle">
                                             </a>
                                         </div>
                                         <h3><a href="{% url 'videochat:u' result.object.pk %}">{{ result.object.username }}</a></h3>

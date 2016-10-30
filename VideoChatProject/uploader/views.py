@@ -16,7 +16,7 @@ def upload_image(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            request.user.profile.image = form.cleaned_data['image']
+            request.user.profile.image = request.FILES['image']
             request.user.profile.save()
 
             return render(request, 'upload_image.html', {'alert': 'success'})
