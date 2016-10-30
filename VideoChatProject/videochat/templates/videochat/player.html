@@ -44,30 +44,57 @@
                                     </div>
                                 </form>
                                 <script>
+
                                 $(function() {
-                                  $("#chat").on('submit', function(e) {
-                                    e.preventDefault();
-                                    message = $("#chat-input").val();
-                                    if (message != "") {
-                                      $("#chat-input").val("");
+                                    $("#chat").on('submit', function(e) {
+                                      e.preventDefault();
+                                      message = $("#chat-input").val();
+                                      if (message != "") {
+                                        $("#chat-input").val("");
+                                        $.ajax({
+                                          url: "/vc/newchatmessage/",
+                                          method: "POST",
+                                          data: {'message': message, 'videopk': {{ video.pk }},
+                                                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
+                                        }).done(function(data) {
+                                          console.log(data)
+                                        });
+                                      }
+                                    });
+
+                                    var last_message_received = -1;
+                                    function getMessages() {
                                       $.ajax({
-                                        url: "/vc/newchatmessage/",
+                                        url: "/vc/getchatmessages/",
                                         method: "POST",
-                                        data: {'message': message, 'videopk': {{ video.pk }},
+                                        data: {'videopk': {{ video.pk }}, 'lastmessagereceived': last_message_received,
                                                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
                                       }).done(function(data) {
-                                        console.log(data)
+                                        messages = JSON.parse(data);
+                                        for (var key in messages) {
+                                          console.log(messages[key]);
+                                          $('#output').prepend(
+                                            '<li class="list-group-item"><strong>' +
+                                            messages[key]['author'] +
+                                            ':</strong><span class="text">  ' +
+                                            messages[key]['text'] + '</span></li>');
+                                          last_message_received = key;
+                                        }
                                       });
-                                    }
-                                  });
-                                });
-                                </script>
-                                </div>
-                          </div>
-                    </div>
-                </div>
-            </div>
 
-    </div>
-{% endblock %}
+                                      setTimeout(getMessages, 1000);
+                                    }
+
+                                    getMessages();
+
+                                  });
+                                  </script>
+                                  </div>
+                            </div>
+                      </div>
+                  </div>
+              </div>
+
+      </div>
+  {% endblock %}
 

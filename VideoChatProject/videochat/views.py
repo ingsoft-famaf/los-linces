@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from friendship.models import Friend
 
+import json
+
 from .models import Video, Message
 
 
@@ -53,3 +55,35 @@ def newchatmessage(request):
     message.save()
 
     return HttpResponse(request.POST.get('message'))
+
+@login_required
+def getchatmessages(request):
+    if not request.POST:
+        # Return HttpResponse with error
+        pass
+
+    videopk = pk=request.POST.get('videopk')
+    try:
+        video = Video.objects.filter(videopk).first()
+    except:
+        # Video does not exist
+        pass
+
+    mm = {}
+    last_message_received = int(request.POST.get('lastmessagereceived'))
+
+    if last_message_received > 0:
+        messages = Message.objects.filter(pk__gt=last_message_received) \
+                   .filter(video=videopk).all()
+    else:
+        # Get all/some messages
+        messages = Message.objects.order_by('-date_sent').all()[:5]
+
+    for m in messages:
+        mm[m.pk] = {'pk': m.pk,
+                    'text': m.text,
+                    'author': m.author.username,
+                   }
+
+    return HttpResponse(json.dumps(mm))
+
