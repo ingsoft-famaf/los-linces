@@ -33,9 +33,55 @@
             </li>
             <li class=""><a href="#tab2-4" data-toggle="tab">Uploaded videos</a>
             </li>
-            <li class=""><a href="#tab2-5" data-toggle="tab">Linked accounts</a>
-            </li>
+
         </ul>
+
+        <script>
+                function handle_request(request_accepted, pk, username) {
+
+                    var accept_button = document.getElementById(pk); // pk is accept button's id
+                    var reject_button = document.getElementById(username); // username is reject button's id
+
+                    var acceptClasses = accept_button.classList;
+                    var rejectClasses = reject_button.classList;
+
+                    handle_request_ajax(request_accepted, pk);
+
+                    if (request_accepted) {
+                        accept_button.innerHTML = "Accepted";
+                        acceptClasses.remove('btn-success');
+                        acceptClasses.add('btn-default');
+
+                        $(accept_button).prop('disabled', true);
+                        $(reject_button).hide();
+
+                        accept_button.blur();
+                    } else {
+                        reject_button.innerHTML = "Rejected";
+                        rejectClasses.remove('btn-danger');
+                        rejectClasses.add('btn-default');
+
+                        $(reject_button).prop('disabled', true);
+                        $(accept_button).hide();
+
+                        reject_button.blur();
+                    }
+                }
+
+                function handle_request_ajax(result, pk){
+                    console.log('Handle friend request');
+                    $.ajax({
+                        type: "POST",
+                        url: "/vc/ajax/handle_request/",
+                        dataType: "json",
+                        data: { "to_user":{{ user.pk }}, "from_user":pk, "result":result},
+                        success: function(data) {
+                            console.log(data.message);
+                        }
+                    });
+                }
+
+                </script>
 
         <div class="tab-content tab-content-inverse">
             <div class="tab-pane active" id="tab2-1">
@@ -45,16 +91,42 @@
             </div>
             <!-- /.tab -->
             <div class="tab-pane" id="tab2-2">
-                {% for frequest in friend_requests %}
-                    <ul>
-                        <li>{{ frequest.from_user }}  <a href="#">Aceptar solicitud</a></li>
-                    </ul>
-                 {% empty %}
-                    <p>You don't have friend requests.</p>
-                {% endfor %}
+                <div class="center container">
+                    <table>
+                        {% for frequest in friend_requests %}
+                            <tr>
+                                <td class="col-md-8"><a href="{% url 'videochat:u' frequest.from_user.pk %}">{{ frequest.from_user.username }}</a></td>
+
+
+                                <td class="col-md-3">
+                                    <button id="{{ frequest.from_user.pk }}"
+                                            onclick="handle_request(true ,{{ frequest.from_user.pk }}, '{{ frequest.from_user.username }}')"
+                                            type="button" class="btn btn-lg btn-success">Accept
+                                    </button>
+                                    <button id="{{ frequest.from_user.username }}"
+                                            onclick="handle_request(false ,{{ frequest.from_user.pk }}, '{{ frequest.from_user.username }}')"
+                                            type="button" class="btn btn-lg btn-danger">Reject
+                                    </button>
+                                </td>
+                            </tr>
+                         {% empty %}
+                            <p>You don't have friend requests.</p>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
             <!-- /.tab -->
             <div class="tab-pane" id="tab2-3">
+                {% for friend in friends %}
+                    <ul>
+                        <li>{{ friend }} </li>
+                    </ul>
+                {% empty %}
+                    <p>You don't have friends.</p>
+                {% endfor %}
+            </div>
+            <!-- /.tab -->
+            <div class="tab-pane" id="tab2-4">
                 {% for friend in friends %}
                     <ul>
                         <li>{{ frequest.user }} </li>
@@ -63,20 +135,6 @@
                     <p>You don't have friends.</p>
                 {% endfor %}
             </div>
-            <!-- /.tab -->
-            <div class="tab-pane" id="tab2-4">
-                <p>
-                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred
-                    vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan,
-                    sartorial keffiyeh echo park vegan.
-                </p>
-                <p>
-                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater
-                    eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
-                </p>
-
-            </div>
-            <!-- /.tab -->
         </div>
     </div>
 	</div>
