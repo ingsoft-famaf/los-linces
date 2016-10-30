@@ -62,9 +62,9 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'videochat:u' user.pk %}">My profile</a>
                                 </li>
-                                <li><a href="/logout/">Sign out</a>
+                                <li><a href="{% url 'videochat:fr' user.pk %}">Friend requests</a>
                                 </li>
-                                <li><a href="#">Settings</a>
+                                <li><a href="/logout/">Sign out</a>
                                 </li>
 
                             </ul>
