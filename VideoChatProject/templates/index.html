@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %} Watch videos with your friends {% endblock %}
 {% load static %}
 {% load videochat_extras %}
 
@@ -51,7 +52,7 @@
                     </div>
                 </div>
             {% empty %}
-                <p>No results found.</p>
+                <p>Nobody is watching videos by the moment.</p>
             {% endfor %}
         {% endwith %}
     </div>

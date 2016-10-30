@@ -33,6 +33,7 @@ class Profile(models.Model):
     )
     videoHistory = models.ManyToManyField(Video, through='Seen')
     currentlyWatching = models.BooleanField(default=False)
+    image = models.ImageField(upload_to="images/%Y/%m/%d", default='images/none/default.png')
 
 
 @receiver(post_save, sender=User)

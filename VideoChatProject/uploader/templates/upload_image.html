@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+Upload your profile image
+{% endblock %}
+{% block body_block %}
+    <div id="heading-breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="heading text-center">
+                    <h2>Upload a profile image</h2>
+                </div>
+                <p class="lead text-center">Let your friends know more about you</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% if alert %}
+            {% ifequal alert 'success' %}
+                <div class="alert alert-success" role="alert">Well done! You successfully uploaded an image.</div>
+            {% endifequal %}
+        {% else %}
+
+        <form action="{% url 'uploader:image' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+                <input id="id_image" type="file" class="" name="image">
+            </p>
+
+
+            <input class="btn btn-lg btn-template-main" type="submit" value="Upload" />
+
+        </form>
+        {% endif %}
+    <hr>
+    </div>
+
+<!-- Upload form. Note enctype attribute! -->
+
+{% endblock %}
+
