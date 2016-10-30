@@ -51,21 +51,21 @@
                     <script>
                         function change(id) {
                             var elem = document.getElementById(id);
-                            var elemClasses = elem.classList;
+                            var elem_classes = elem.classList;
 
                             console.log(elem.innerHTML);
                             if (elem.innerHTML=="Add friend"){
                                 add_friend(id);
 
                                 elem.innerHTML = "Cancel request";
-                                elemClasses.remove('btn-success');
-                                elemClasses.add('btn-danger');
+                                elem_classes.remove('btn-success');
+                                elem_classes.add('btn-danger');
                             } else {
                                 cancel_fr(id);
 
                                 elem.innerHTML = "Add friend";
-                                elemClasses.remove('btn-danger');
-                                elemClasses.add('btn-success');
+                                elem_classes.remove('btn-danger');
+                                elem_classes.add('btn-success');
                             }
                             elem.blur();
                         }
@@ -73,7 +73,7 @@
                             console.log('Add friend');
                             $.ajax({
                                 type: "POST",
-                                url: "/vc/ajax/add/",
+                                url: "/vc/ajax/add_friend/",
                                 dataType: "json",
                                 data: { "from_user": {{ request.user.pk }}, "to_user":pk },
                                 success: function(data) {
@@ -94,6 +94,31 @@
                                 }
                             });
                         }
+
+                        function delete_friend(pk) {
+                            console.log('Delete friend');
+                            if (confirm("This action is permanently. Are you sure?")) {
+                                var delete_button = document.getElementById(pk);
+                                var delete_classes = delete_button.classList;
+
+                                delete_classes.remove('btn-danger');
+                                delete_classes.add('btn-default');
+
+                                delete_button.innerHTML = "Deleted";
+                                $(delete_button).prop('disabled', true);
+                                delete_button.blur();
+
+                                $.ajax({
+                                type: "POST",
+                                url: "/vc/ajax/delete_friend/",
+                                dataType: "json",
+                                data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                                success: function(data) {
+                                    console.log(data.message);
+                                }
+                            });
+                            }
+                        }
                     </script>
 
                 {% with results=friends|get_tuples:6 %}
@@ -109,16 +134,21 @@
                                         </div>
                                         <h3><a href="{% url 'videochat:u' result.pk %}">{{ result.username }}</a></h3>
 
-                                         {% if request.user.pk|check_not_friends:result.pk and request.user.pk != result.pk %}
-                                            {% if request.user.pk|check_request_sent:result.pk %}
-                                                <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
-                                                        type="button" class="btn btn-lg btn-danger">Cancel request</button>
-                                            {% else %}
-                                                 <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
-                                                        type="button" class="btn btn-lg btn-success">Add friend</button>
+                                        {% if request.user.pk != result.pk %}
+                                            {% if request.user.pk|check_not_friends:result.pk %}
+                                                {% if request.user.pk|check_request_sent:result.pk %}
+                                                    <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
+                                                    type="button" class="btn btn-lg btn-danger">Cancel request</button>
+                                                {% else %}
+                                                    <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
+                                                    type="button" class="btn btn-lg btn-success">Add friend</button>
+                                                {% endif %}
 
+                                            {% else %}
+                                                <button id="{{ result.pk }}" onclick="delete_friend({{ result.pk }})"
+                                                        type="button" class="btn btn-lg btn-danger">Delete friend</button>
                                             {% endif %}
-                                        {% endif %}
+                                        {% endif%}
                                     </div>
                                 </div>
                             {% endfor %}

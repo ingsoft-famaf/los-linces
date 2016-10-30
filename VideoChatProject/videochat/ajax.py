@@ -7,6 +7,20 @@ from friendship.models import FriendshipRequest
 
 
 @csrf_exempt
+def delete_friend(request):
+    if request.is_ajax() and request.POST:
+        from_user = User.objects.get(pk=request.POST.get('from_user'))
+        to_user = User.objects.get(pk=request.POST.get('to_user'))
+
+        Friend.objects.remove_friend(from_user=from_user, to_user=to_user)
+
+        data = {'message': "{} deleted".format(request.POST.get('to_user'))}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        raise Http404
+
+
+@csrf_exempt
 def finish_watching(request):
     if request.is_ajax() and request.POST:
         current_user = User.objects.get(pk=request.POST.get('user'))

@@ -9,15 +9,15 @@
         var accept_button = document.getElementById(pk); // pk is accept button's id
         var reject_button = document.getElementById(username); // username is reject button's id
 
-        var acceptClasses = accept_button.classList;
-        var rejectClasses = reject_button.classList;
+        var accept_classes = accept_button.classList;
+        var reject_classes = reject_button.classList;
 
         handle_request_ajax(request_accepted, pk);
 
         if (request_accepted) {
             accept_button.innerHTML = "Accepted";
-            acceptClasses.remove('btn-success');
-            acceptClasses.add('btn-default');
+            accept_classes.remove('btn-success');
+            accept_classes.add('btn-default');
 
             $(accept_button).prop('disabled', true);
             $(reject_button).hide();
@@ -25,8 +25,8 @@
             accept_button.blur();
         } else {
             reject_button.innerHTML = "Rejected";
-            rejectClasses.remove('btn-danger');
-            rejectClasses.add('btn-default');
+            reject_classes.remove('btn-danger');
+            reject_classes.add('btn-default');
 
             $(reject_button).prop('disabled', true);
             $(accept_button).hide();
