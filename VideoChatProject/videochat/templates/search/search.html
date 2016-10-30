@@ -88,6 +88,8 @@
                         elemClasses.remove('btn-success');
                         elemClasses.add('btn-danger');
                     } else {
+                        cancel_fr(id);
+
                         elem.innerHTML = "Add friend";
                         elemClasses.remove('btn-danger');
                         elemClasses.add('btn-success');
@@ -95,17 +97,30 @@
                     elem.blur();
                 }
                 function add_friend(pk){
-                        console.log('Add friend AJAX');
-                        $.ajax({
-                            type: "POST",
-                            url: "/vc/ajax/add/",
-                            dataType: "json",
-                            data: { "from_user": {{ user.pk }}, "to_user":pk },
-                            success: function(data) {
-                                alert(data.message);
-                            }
-                        });
-                    }
+                    console.log('Add friend');
+                    $.ajax({
+                        type: "POST",
+                        url: "/vc/ajax/add/",
+                        dataType: "json",
+                        data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                        success: function(data) {
+                            console.log(data.message);
+                        }
+                    });
+                }
+
+                function cancel_fr(pk){
+                    console.log('Cancel friendship request');
+                    $.ajax({
+                        type: "POST",
+                        url: "/vc/ajax/cancel_fr/",
+                        dataType: "json",
+                        data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                        success: function(data) {
+                            console.log(data.message);
+                        }
+                    });
+                }
                 </script>
 
                 {% with results=page.object_list|get_tuples:6 %}
@@ -120,7 +135,17 @@
                                             </a>
                                         </div>
                                         <h3><a href="{% url 'videochat:u' result.object.pk %}">{{ result.object.username }}</a></h3>
-                                        <button id="{{ result.object.pk }}" onclick="change({{ result.object.pk }})" type="button" class="btn btn-lg btn-success">Add friend</button>
+
+                                        {% if request.user.pk|check_not_friends:result.object.pk and request.user.pk != result.object.pk %}
+                                            {% if request.user.pk|check_request_sent:result.object.pk %}
+                                                <button id="{{ result.object.pk }}" onclick="change({{ result.object.pk }})"
+                                                        type="button" class="btn btn-lg btn-danger">Cancel request</button>
+                                            {% else %}
+                                                 <button id="{{ result.object.pk }}" onclick="change({{ result.object.pk }})"
+                                                        type="button" class="btn btn-lg btn-success">Add friend</button>
+
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
