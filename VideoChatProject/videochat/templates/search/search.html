@@ -56,7 +56,7 @@
                                         <div class="content">
                                             <h4><a href="#">{{ result.object.title }}</a></h4>
 
-                                            <p class="author-category">By <a href="#">John Snow</a>
+                                            <p class="author-category">By <a href="{% url 'videochat:u' result.object.author.pk %}">{{ result.object.author.username }}</a>
                                             </p>
 
                                             <p class="intro">{{ result.object.description }}</p>
