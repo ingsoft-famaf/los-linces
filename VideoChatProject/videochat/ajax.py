@@ -7,6 +7,19 @@ from friendship.models import FriendshipRequest
 
 
 @csrf_exempt
+def finish_watching(request):
+    if request.is_ajax() and request.POST:
+        current_user = User.objects.get(pk=request.POST.get('user'))
+
+        current_user.profile.currentlyWatching = False
+        current_user.profile.save()
+        data = {'message': "{} finished watching a video".format(request.POST.get('user'))}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        raise Http404
+
+
+@csrf_exempt
 def add_friend(request):
     if request.is_ajax() and request.POST:
         from_user = User.objects.get(pk=request.POST.get('from_user'))

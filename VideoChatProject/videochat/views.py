@@ -7,6 +7,8 @@ from django.http import Http404
 
 def play(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
+    request.user.profile.currentlyWatching = True
+    request.user.profile.save()
     seen = Seen.objects.create(video=video, user=request.user.profile)
     seen.save()
     return render(request, 'videochat/player.html', {'video': video})
