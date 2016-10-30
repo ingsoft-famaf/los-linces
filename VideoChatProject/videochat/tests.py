@@ -19,12 +19,12 @@ class VideoPlayMethodTest(TestCase):
 		#user = User.objects.create_user(username="pepita", password="contraseñadificil")
 		#authenticate(username=user.username, password=user.password)
 		self.videopk = self.video.pk + 1
-		url = self.client.get(reverse('videochat: v'))
+		url = self.client.get(reverse('videochat: play'))
 		request = request_factory.get(url)
 		response = v(request, videopk)
 		self.assertEqual(response.status_code,404)
 
-	def _202_tests(self):
+	def _202_test(self):
 		
 		request_factory = RequestFactory()
 		url = 'http://localhost:8000/play/v/videopk'
