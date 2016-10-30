@@ -47,3 +47,10 @@ def upload(request):
     else:
         form = UploadFileForm()
         return render(request, 'upload.html', {'form': form})
+
+@login_required
+def delete(request, video_id):
+    video = Video.objects.get(pk = video_id)
+    #if (user.has_perm('uploader.delete_video'))
+    video.delete()
+    return render(request, 'delete.html',{'video': video})
