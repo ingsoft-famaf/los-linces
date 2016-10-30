@@ -19,6 +19,18 @@
                         </div>
                         <p class="lead text-center">User since {{ user.date_joined.date }}</p>
                     </div>
+                    <div style="padding-top: 50px" class="col-md-3">
+                         {% if request.user.pk|check_not_friends:user.pk and request.user.pk != user.pk %}
+                            {% if request.user.pk|check_request_sent:user.pk %}
+                                <button id="{{ user.pk }}" onclick="change({{ user.pk }})"
+                                        type="button" class="btn btn-lg btn-danger">Cancel request</button>
+                            {% else %}
+                                 <button id="{{ user.pk }}" onclick="change({{ user.pk }})"
+                                        type="button" class="btn btn-lg btn-success">Add friend</button>
+
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
