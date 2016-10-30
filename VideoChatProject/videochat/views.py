@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Video
+from .models import Video, Seen
 from django.contrib.auth.models import User
 from friendship.models import Friend
 from django.http import Http404
@@ -7,6 +7,8 @@ from django.http import Http404
 
 def play(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
+    seen = Seen.objects.create(video=video, user=request.user.profile)
+    seen.save()
     return render(request, 'videochat/player.html', {'video': video})
 
 
