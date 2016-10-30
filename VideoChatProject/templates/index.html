@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load videochat_extras %}
 
 {% block body_block %}
     <div id="heading-breadcrumbs">
@@ -13,314 +14,45 @@
         </div>
     </div>
     <div class="container">
+        {% with results=videos_being_watched|get_tuples:4 %}
+            {% for tuple in results %}
+                <div class="col-md-12">
+                    <div class="row">
+                        {% for friend,result in tuple %}
+                            <div class="col-md-3 col-sm-6">
+                                <div class="box-image-text blog">
+                                    <div class="top">
+                                        <div class="image">
+                                            <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
+                                        </div>
 
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
+                                        <div class="bg"></div>
 
-                                <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 1</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
+                                        <div class="text">
+                                            <p class="buttons">
+                                                <a href="{% url 'videochat:v' result.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <h4><a href="#">{{ result.title }}</a></h4>
 
-                </div>
+                                        <p class="author-category">Being watched by <a href="{% url 'videochat:u' friend.pk %}">{{ friend.username }}</a>
+                                        <p class="author-category">Uploaded by <a href="{% url 'videochat:u' result.author.pk %}">{{ result.author.username }}</a>
 
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-3.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 2</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
+                                        </p>
 
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-5.jpg" %}" alt="" class="img-responsive">
+                                        <p class="intro">{{ result.description }}</p>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 3</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-6.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 4</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Am terminated it excellence invitation projection as. She graceful shy believed distance use nay. Lively is people.</p>
-                            </p>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 1</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-3.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 2</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-5.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 3</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-6.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 4</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Am terminated it excellence invitation projection as. She graceful shy believed distance use nay. Lively is people.</p>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 1</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-3.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 2</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-5.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 3</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image">
-                                <img src="{% static "/img/portfolio-6.jpg" %}" alt="" class="img-responsive">
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="#" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h4><a href="#">Video 4</a></h4>
-                            <p class="author-category">By <a href="#">John Snow</a>
-                            </p>
-                            <p class="intro">Am terminated it excellence invitation projection as. She graceful shy believed distance use nay. Lively is people.</p>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+        {% endwith %}
     </div>
 {% endblock %}

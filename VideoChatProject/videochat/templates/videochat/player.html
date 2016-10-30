@@ -16,7 +16,7 @@
                 dataType: "json",
                 data: {'user':{{ request.user.pk }}},
                 success: function(data) {
-                    console.log(data.message);
+                    alert(data.message);
                 }
             });
         });
