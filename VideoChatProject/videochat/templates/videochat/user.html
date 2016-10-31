@@ -1,77 +1,206 @@
 {% extends 'base.html' %}
 
-{% block title %} Perfil de {{ user.username }} {% endblock %}
-	
+{% block title %} {{ user.username }}'s Profile {% endblock %}
+
 {% block body_block %}
     {% load static %}
+    {% load videochat_extras %}
 
 	<div class="container">
         <div id="heading-breadcrumbs">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">
-                        <img style="height: 150px; width: 150px;" src="{% static "img/person-1.jpg" %}" alt="" class="img-responsive">
+                        <img style="height: 150px; width: 150px;" src="{{ user.profile.image.url }}" alt="" class="img-responsive">
                     </div>
                     <div class="col-md-6">
                         <div class="heading text-center">
                             <h2>{{ user.username }}</h2>
                         </div>
-                        <p class="lead text-center">User since {{ user.date_joined }}</p>
+                        <p class="lead text-center">User since {{ user.date_joined.date }}</p>
                     </div>
+                    <div style="padding-top: 50px" class="col-md-3">
+                         {% if request.user.pk|check_not_friends:user.pk and request.user.pk != user.pk %}
+                            {% if request.user.pk|check_request_sent:user.pk %}
+                                <button id="{{ user.pk }}" onclick="change({{ user.pk }})"
+                                        type="button" class="btn btn-lg btn-danger">Cancel request</button>
+                            {% else %}
+                                 <button id="{{ user.pk }}" onclick="change({{ user.pk }})"
+                                        type="button" class="btn btn-lg btn-success">Add friend</button>
 
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="tabs">
-        <ul class="nav nav-pills nav-justified">
-            <li class="active"><a href="#tab2-1" data-toggle="tab">Personal information</a>
-            </li>
-            <li class=""><a href="#tab2-2" data-toggle="tab">Friend requests</a>
-            </li>
-            <li class=""><a href="#tab2-3" data-toggle="tab">Uploaded videos</a>
-            </li>
-            <li class=""><a href="#tab2-4" data-toggle="tab">Linked accounts</a>
-            </li>
-        </ul>
-        <div class="tab-content tab-content-inverse">
-            <div class="tab-pane active" id="tab2-1">
-                <h4>First name:</h4> {{ user.first_name }}
-                <h4>Last name:</h4> {{ user.last_name}}
-                <h4>Email account:</h4> {{ user.email}}
-            </div>
-            <!-- /.tab -->
-            <div class="tab-pane" id="tab2-2">
-                {% for frequest in friend_requests %}
-                    <ul>
-                        <li>{{ frequest }}</li>
-                    </ul>
-                {% endfor %}
-            </div>
-            <!-- /.tab -->
-            <div class="tab-pane" id="tab2-3">
-                <p>
-                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo
-                    enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown.
-                    Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed
-                    echo park.
-                </p>
-            </div>
-            <!-- /.tab -->
-            <div class="tab-pane" id="tab2-4">
-                <p>
-                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred
-                    vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan,
-                    sartorial keffiyeh echo park vegan.
-                </p>
-                <p>
-                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater
-                    eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
-                </p>
+            <ul class="nav nav-pills nav-justified">
+                <li class="active"><a href="#tab2-1" data-toggle="tab">Friends</a>
+                </li>
+                <li class=""><a href="#tab2-2" data-toggle="tab">Videos</a>
+                </li>
 
+            </ul>
+
+            <div class="tab-content tab-content-inverse">
+                <!-- /.tab -->
+                <div class="tab-pane active" id="tab2-1">
+
+                    <script>
+                        function change(id) {
+                            var elem = document.getElementById(id);
+                            var elem_classes = elem.classList;
+
+                            console.log(elem.innerHTML);
+                            if (elem.innerHTML=="Add friend"){
+                                add_friend(id);
+
+                                elem.innerHTML = "Cancel request";
+                                elem_classes.remove('btn-success');
+                                elem_classes.add('btn-danger');
+                            } else {
+                                cancel_fr(id);
+
+                                elem.innerHTML = "Add friend";
+                                elem_classes.remove('btn-danger');
+                                elem_classes.add('btn-success');
+                            }
+                            elem.blur();
+                        }
+                        function add_friend(pk){
+                            console.log('Add friend');
+                            $.ajax({
+                                type: "POST",
+                                url: "/vc/ajax/add_friend/",
+                                dataType: "json",
+                                data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                                success: function(data) {
+                                    console.log(data.message);
+                                }
+                            });
+                        }
+
+                        function cancel_fr(pk){
+                            console.log('Cancel friendship request');
+                            $.ajax({
+                                type: "POST",
+                                url: "/vc/ajax/cancel_fr/",
+                                dataType: "json",
+                                data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                                success: function(data) {
+                                    console.log(data.message);
+                                }
+                            });
+                        }
+
+                        function delete_friend(pk) {
+                            console.log('Delete friend');
+                            if (confirm("This action is permanently. Are you sure?")) {
+                                var delete_button = document.getElementById(pk);
+                                var delete_classes = delete_button.classList;
+
+                                delete_classes.remove('btn-danger');
+                                delete_classes.add('btn-default');
+
+                                delete_button.innerHTML = "Deleted";
+                                $(delete_button).prop('disabled', true);
+                                delete_button.blur();
+
+                                $.ajax({
+                                type: "POST",
+                                url: "/vc/ajax/delete_friend/",
+                                dataType: "json",
+                                data: { "from_user": {{ request.user.pk }}, "to_user":pk },
+                                success: function(data) {
+                                    console.log(data.message);
+                                }
+                            });
+                            }
+                        }
+                    </script>
+
+                {% with results=friends|get_tuples:6 %}
+                    {% for tuple in results %}
+                        <div class="row">
+                            {% for result in tuple %}
+                                <div class="col-md-2 col-sm-3">
+                                    <div class="team-member" data-animate="fadeInDown">
+                                        <div class="image">
+                                            <a href="{% url 'videochat:u' result.pk %}">
+                                                <img src="{{ result.profile.image.url }}" alt="" class="img-responsive img-circle">
+                                            </a>
+                                        </div>
+                                        <h3><a href="{% url 'videochat:u' result.pk %}">{{ result.username }}</a></h3>
+
+                                        {% if request.user.pk != result.pk %}
+                                            {% if request.user.pk|check_not_friends:result.pk %}
+                                                {% if request.user.pk|check_request_sent:result.pk %}
+                                                    <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
+                                                    type="button" class="btn btn-lg btn-danger">Cancel request</button>
+                                                {% else %}
+                                                    <button id="{{ result.pk }}" onclick="change({{ result.pk }})"
+                                                    type="button" class="btn btn-lg btn-success">Add friend</button>
+                                                {% endif %}
+
+                                            {% else %}
+                                                <button id="{{ result.pk }}" onclick="delete_friend({{ result.pk }})"
+                                                        type="button" class="btn btn-lg btn-danger">Delete friend</button>
+                                            {% endif %}
+                                        {% endif%}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% empty %}
+                        <p>No results found.</p>
+                    {% endfor %}
+                {% endwith %}
+                </div>
+                <!-- /.tab -->
+                <div class="tab-pane" id="tab2-2">
+                    {% with results=videos|get_tuples:4 %}
+                        {% for tuple in results %}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    {% for result in tuple %}
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="box-image-text blog">
+                                                <div class="top">
+                                                    <div class="image">
+                                                        <img src="{% static "/img/portfolio-4.jpg" %}" alt="" class="img-responsive">
+                                                    </div>
+
+                                                    <div class="bg"></div>
+
+                                                    <div class="text">
+                                                        <p class="buttons">
+                                                            <a href="{% url 'videochat:v' result.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="content">
+                                                    <h4><a href="#">{{ result.title }}</a></h4>
+
+                                                    <p class="author-category">By <a href="{% url 'videochat:u' result.author.pk %}">{{ result.author.username }}</a>
+                                                    </p>
+
+                                                    <p class="intro">{{ result.description }}</p>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No results found.</p>
+                        {% endfor %}
+                    {% endwith %}
+                    <p>&nbsp;</p>
+                </div>
             </div>
-            <!-- /.tab -->
         </div>
-    </div>
 	</div>
 {% endblock %}

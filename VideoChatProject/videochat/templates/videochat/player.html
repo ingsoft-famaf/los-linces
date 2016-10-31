@@ -7,6 +7,20 @@
 {% block title %}video.title{% endblock %}
 
 {% block body_block %}
+    <script>
+        $(window).unload(function(){
+            $.ajax({
+                type: 'POST',
+                url: "/vc/ajax/finish_watching/",
+                async:false, // The browser waits for the request to finish.
+                dataType: "json",
+                data: {'user':{{ request.user.pk }}},
+                success: function(data) {
+                    alert(data.message);
+                }
+            });
+        });
+    </script>
     <div class="container text-center">
     <hr>
     {% load static %}
@@ -97,4 +111,3 @@
 
       </div>
   {% endblock %}
-

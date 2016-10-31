@@ -58,13 +58,15 @@
                         <a style="text-decoration: none;" href="{% url 'uploader:index' %}">Upload <b></b></a>
                     </li>
                      <li class="dropdown">
-                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{% static "img/person-1.jpg" %}" alt="" class="img-small"></a>
+                            <a style="margin-bottom: -15px"; class="img-a dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)"><img src="{{ request.user.profile.image.url }}" alt="" class="img-small"></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'videochat:u' user.pk %}">My profile</a>
+                                <li><a href="{% url 'videochat:u' user.pk %}">My profile: {{ request.user.username }}</a>
+                                </li>
+                                <li><a href="{% url 'videochat:fr' user.pk %}">Friend requests</a>
+                                </li>
+                                <li><a href="{% url 'uploader:image' %}">Change image</a>
                                 </li>
                                 <li><a href="/logout/">Sign out</a>
-                                </li>
-                                <li><a href="#">Settings</a>
                                 </li>
 
                             </ul>

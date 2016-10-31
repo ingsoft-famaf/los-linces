@@ -1,39 +1,49 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from friendship.models import Friend
+from django.http import Http404
 
 import json
 
-from .models import Video, Message
+from .models import Video, Message, Seen
 
 
 def play(request, video_id):
     video = get_object_or_404(Video, pk=video_id)
+    request.user.profile.currentlyWatching = True
+    request.user.profile.save()
+    seen = Seen.objects.create(video=video, user=request.user.profile)
+    seen.save()
     return render(request, 'videochat/player.html', {'video': video})
 
 
 def user(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
 
-    if Friend.objects.are_friends(request.user, other_user) or (request.user == other_user):
-        friend_requests = Friend.objects.unread_requests(user=other_user)
+    same_user = True
+    if request.user != other_user:
+        same_user = False
 
-        return render(request, 'videochat/user.html', {'user': other_user,
-                                                       'friend_requests': friend_requests})
-    else:
-        return render(request, 'videochat/friend_request.html', {'user': other_user, 'me': request.user})
+    friends = Friend.objects.friends(user=other_user)
+    videos = Video.objects.filter(author=other_user)
+
+    return render(request, 'videochat/user.html', {'user': other_user,
+                                                   'friends': friends,
+                                                   'same_user': same_user,
+                                                   'videos': videos, })
 
 
-def friend(request, user_id):
+def friendship_requests(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
-    if not((Friend.objects.are_friends(request.user, other_user)) or(request.user == other_user)):
-        Friend.objects.add_friend(request.user, other_user)
-        return render(request, 'videochat/request_sent.html', {'user': other_user})
+    if request.user == other_user:
+        friend_requests = Friend.objects.unread_requests(user=other_user)
+        return render(request, 'videochat/friendship_requests.html', {'user': other_user,
+                                                                      'friend_requests': friend_requests, })
     else:
-        return render(request, 'videochat/user.html', {'user': other_user})
+        return Http404
+
 
 @login_required
 def newchatmessage(request):
@@ -55,6 +65,7 @@ def newchatmessage(request):
     message.save()
 
     return HttpResponse(request.POST.get('message'))
+
 
 @login_required
 def getchatmessages(request):
@@ -86,4 +97,3 @@ def getchatmessages(request):
                    }
 
     return HttpResponse(json.dumps(mm))
-

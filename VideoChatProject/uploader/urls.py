@@ -21,9 +21,8 @@ from . import views
 app_name = 'uploader'
 
 urlpatterns = [
-    url(r'play/', include('videochat.urls')),
-    url(r'^admin/', admin.site.urls),
     url(r'^$', views.upload, name='index'),
+    url(r'^image$', views.upload_image, name='image'),
 ]
 
 
