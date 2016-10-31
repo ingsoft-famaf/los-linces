@@ -197,11 +197,13 @@
                                                             <a href="{% url 'videochat:v' result.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
 
                                                         </p>
-                                                        <p class="buttons">
-                                                            
-                                                            <a onclick="delete_video({{ result.pk }})" href="#" class="btn btn-template-transparent-primary"><i class="fa fa-trash-o"></i> Delete</a>
+                                                        {% if request.user.pk == result.author.pk %}
+                                                            <p class="buttons">
+                                                                
+                                                                <a onclick="delete_video({{ result.pk }})" href="#" class="btn btn-template-transparent-primary"><i class="fa fa-trash-o"></i> Delete</a>
 
-                                                        </p>
+                                                            </p>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                                 <div class="content">
