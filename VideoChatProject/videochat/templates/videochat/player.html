@@ -41,7 +41,7 @@
                           <div class="panel panel-default">
                                 <div class="panel-heading">Chat</div>
                                 <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
-                                <ul class="list-group" id="output" style="text-align: left">
+                                <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is a message </span></li>
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is another message </span></li>
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > And other </span></li>
@@ -49,6 +49,7 @@
                                 </ul>
                                 <div class="panel-body">
                                 <form id="chat">
+                                    {% csrf_token %}
                                     <div class="input-group">
                                     <input type="text" class="form-control" id="chat-input" />
                                         <span style="padding-left: 1px" class="input-group-btn">
@@ -56,12 +57,56 @@
                                         </span>
                                     </div>
                                 </form>
-                                </div>
-                          </div>
-                    </div>
-                </div>
-            </div>
+                                <script>
+                                videochat = {};
+                                videochat.last_chat_message = {{ last_chat_message }};
 
-    </div>
-{% endblock %}
+                                $(function() {
+                                    $("#chat").on('submit', function(e) {
+                                      e.preventDefault();
+                                      message = $("#chat-input").val();
+                                      if (message != "") {
+                                        $("#chat-input").val("");
+                                        $.ajax({
+                                          url: "/vc/newchatmessage/",
+                                          method: "POST",
+                                          data: {'message': message, 'videopk': {{ video.pk }},
+                                                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
+                                        })
+                                      }
+                                    });
 
+                                    function getMessages() {
+                                      $.ajax({
+                                        url: "/vc/getchatmessages/",
+                                        method: "GET",
+                                        data: {'videopk': {{ video.pk }},
+                                               'last_chat_message': videochat.last_chat_message}
+                                      }).done(function(data) {
+                                        response = JSON.parse(data);
+                                        for (var i = 0; i < response.messages.length; i++ ) {
+                                          $('#output').append(
+                                            '<li class="list-group-item"><strong>' +
+                                            response.messages[i]['author'] +
+                                            ':</strong><span class="text">  ' +
+                                            response.messages[i]['text'] + '</span></li>');
+                                          $("#output").scrollTop($("#output").prop("scrollHeight"));
+                                        }
+                                        videochat.last_chat_message = response.last_chat_message;
+                                      });
+
+                                      setTimeout(getMessages, 1000);
+                                    }
+
+                                    getMessages();
+
+                                  });
+                                  </script>
+                                  </div>
+                            </div>
+                      </div>
+                  </div>
+              </div>
+
+      </div>
+  {% endblock %}

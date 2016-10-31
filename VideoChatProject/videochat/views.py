@@ -1,9 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Video, Seen
-from django.contrib.auth.models import User, Permission
-from website import settings
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from friendship.models import Friend
 from django.http import Http404
+
+import json
+
+from .models import Video, Message, Seen
 
 
 def play(request, video_id):
@@ -12,7 +16,9 @@ def play(request, video_id):
     request.user.profile.save()
     seen = Seen.objects.create(video=video, user=request.user.profile)
     seen.save()
-    return render(request, 'videochat/player.html', {'video': video})
+    last_chat_message = Message.objects.filter(video=video_id).last().pk
+    return render(request, 'videochat/player.html',
+                  {'video': video, 'last_chat_message': last_chat_message})
 
 
 def user(request, user_id):
@@ -43,3 +49,56 @@ def friendship_requests(request, user_id):
         return Http404
 
 
+@login_required
+def newchatmessage(request):
+    if not request.POST:
+        # Return HttpResponse with error
+        pass
+
+    try:
+        video = Video.objects.filter(pk=request.POST.get('videopk')).first()
+    except:
+        # Video does not exist
+        pass
+
+    message = Message(
+        text=request.POST.get('message'),
+        author=request.user,
+        video=video,
+        )
+    message.save()
+
+    return HttpResponse(request.POST.get('message'))
+
+
+@login_required
+def getchatmessages(request):
+
+    videopk = pk=request.GET.get('videopk')
+    try:
+        video = Video.objects.filter(videopk).first()
+    except:
+        # Video does not exist
+        pass
+
+    response = {}
+
+    last_chat_message = request.GET.get('last_chat_message')
+    response["last_chat_message"] = last_chat_message
+
+    messages_queryset = Message.objects \
+               .filter(pk__gt=last_chat_message) \
+               .filter(video=videopk).order_by('-date_sent')
+
+    if messages_queryset.last() != None:
+        response["last_chat_message"] = messages_queryset.last().pk
+
+    messages = messages_queryset.all()
+    response["messages"] = []
+    for m in messages:
+        response["messages"].append({
+                'text': m.text,
+                'author': m.author.username,
+               })
+        
+    return HttpResponse(json.dumps(response))
