@@ -1,10 +1,32 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from haystack.management.commands import update_index
 
 from uploader.forms import UploadFileForm
 from videochat.models import Video
+from django import forms
+from website import settings
+from django.contrib.auth.models import User, Permission
+
+
+class ImageUploadForm(forms.Form):
+    image = forms.ImageField()
+
+
+@login_required
+def upload_image(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            request.user.profile.image = request.FILES['image']
+            request.user.profile.save()
+
+            return render(request, 'upload_image.html', {'alert': 'success'})
+
+        return render(request, 'upload_image.html', {'form': form})
+    else:
+        form = ImageUploadForm()
+        return render(request, 'upload_image.html', {'form': form})
 
 
 @login_required
