@@ -41,7 +41,7 @@
                           <div class="panel panel-default">
                                 <div class="panel-heading">Chat</div>
                                 <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
-                                <ul class="list-group" id="output" style="text-align: left">
+                                <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is a message </span></li>
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > This is another message </span></li>
                                     <li class="list-group-item"><strong> John Snow &nbsp;</strong> <span class="text" > And other </span></li>
@@ -58,6 +58,8 @@
                                     </div>
                                 </form>
                                 <script>
+                                videochat = {};
+                                videochat.last_chat_message = {{ last_chat_message }};
 
                                 $(function() {
                                     $("#chat").on('submit', function(e) {
@@ -70,30 +72,27 @@
                                           method: "POST",
                                           data: {'message': message, 'videopk': {{ video.pk }},
                                                  'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
-                                        }).done(function(data) {
-                                          console.log(data)
-                                        });
+                                        })
                                       }
                                     });
 
-                                    var last_message_received = -1;
                                     function getMessages() {
                                       $.ajax({
                                         url: "/vc/getchatmessages/",
-                                        method: "POST",
-                                        data: {'videopk': {{ video.pk }}, 'lastmessagereceived': last_message_received,
-                                               'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
+                                        method: "GET",
+                                        data: {'videopk': {{ video.pk }},
+                                               'last_chat_message': videochat.last_chat_message}
                                       }).done(function(data) {
-                                        messages = JSON.parse(data);
-                                        for (var key in messages) {
-                                          console.log(messages[key]);
-                                          $('#output').prepend(
+                                        response = JSON.parse(data);
+                                        for (var i = 0; i < response.messages.length; i++ ) {
+                                          $('#output').append(
                                             '<li class="list-group-item"><strong>' +
-                                            messages[key]['author'] +
+                                            response.messages[i]['author'] +
                                             ':</strong><span class="text">  ' +
-                                            messages[key]['text'] + '</span></li>');
-                                          last_message_received = key;
+                                            response.messages[i]['text'] + '</span></li>');
+                                          $("#output").scrollTop($("#output").prop("scrollHeight"));
                                         }
+                                        videochat.last_chat_message = response.last_chat_message;
                                       });
 
                                       setTimeout(getMessages, 1000);

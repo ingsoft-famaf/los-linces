@@ -16,7 +16,9 @@ def play(request, video_id):
     request.user.profile.save()
     seen = Seen.objects.create(video=video, user=request.user.profile)
     seen.save()
-    return render(request, 'videochat/player.html', {'video': video})
+    last_chat_message = Message.objects.filter(video=video_id).last().pk
+    return render(request, 'videochat/player.html',
+                  {'video': video, 'last_chat_message': last_chat_message})
 
 
 def user(request, user_id):
@@ -69,31 +71,32 @@ def newchatmessage(request):
 
 @login_required
 def getchatmessages(request):
-    if not request.POST:
-        # Return HttpResponse with error
-        pass
 
-    videopk = pk=request.POST.get('videopk')
+    videopk = pk=request.GET.get('videopk')
     try:
         video = Video.objects.filter(videopk).first()
     except:
         # Video does not exist
         pass
 
-    mm = {}
-    last_message_received = int(request.POST.get('lastmessagereceived'))
+    response = {}
 
-    if last_message_received > 0:
-        messages = Message.objects.filter(pk__gt=last_message_received) \
-                   .filter(video=videopk).all()
-    else:
-        # Get all/some messages
-        messages = Message.objects.order_by('-date_sent').all()[:5]
+    last_chat_message = request.GET.get('last_chat_message')
+    response["last_chat_message"] = last_chat_message
 
+    messages_queryset = Message.objects \
+               .filter(pk__gt=last_chat_message) \
+               .filter(video=videopk).order_by('-date_sent')
+
+    if messages_queryset.last() != None:
+        response["last_chat_message"] = messages_queryset.last().pk
+
+    messages = messages_queryset.all()
+    response["messages"] = []
     for m in messages:
-        mm[m.pk] = {'pk': m.pk,
-                    'text': m.text,
-                    'author': m.author.username,
-                   }
-
-    return HttpResponse(json.dumps(mm))
+        response["messages"].append({
+                'text': m.text,
+                'author': m.author.username,
+               })
+        
+    return HttpResponse(json.dumps(response))
