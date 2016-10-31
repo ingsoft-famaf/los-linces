@@ -28,7 +28,24 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+    function delete_video(pk) {
+        console.log('Delete video');
+        if (confirm("This action is permanently. Are you sure?")) {
 
+            $.ajax({
+            type: "POST",
+            url: "/vc/ajax/delete_video/",
+            dataType: "json",
+            data: { "video_pk":pk, "user_pk": {{ request.user.pk }} },
+            success: function(data) {
+                console.log(data.message);
+                location.reload();
+            }
+        });
+        }
+    }
+    </script>
     <div class="container">
         {% if query %}
             {% if 'videochat.video' in form.models.value %}
@@ -51,6 +68,14 @@
                                                 <p class="buttons">
                                                     <a href="{% url 'videochat:v' result.object.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
                                                 </p>
+
+                                                {% if request.user.pk == result.object.author.pk %}
+                                                    <p class="buttons">
+                                                        
+                                                        <a onclick="delete_video({{ result.object.pk }})" href="#" class="btn btn-template-transparent-primary"><i class="fa fa-trash-o"></i> Delete</a>
+
+                                                    </p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="content">
