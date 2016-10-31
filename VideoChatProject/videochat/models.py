@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from website import settings
 from django.db.models.signals import post_save
@@ -35,7 +35,6 @@ class Profile(models.Model):
     currentlyWatching = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images/%Y/%m/%d", default='images/none/default.png')
 
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -45,6 +44,13 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+def user_permissions():
+    content_type = ContentType.objects.get(app_label='videochat', model='Video')
+    permission = Permission.objects.create(codename='delete_video',
+                                           name='Can Delete Own Videos',
+                                           content_type=content_type)
+    permission.save()
 
 
 class Seen(models.Model):

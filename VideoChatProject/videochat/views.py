@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Video, Seen
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from website import settings
 from friendship.models import Friend
 from django.http import Http404
 
@@ -23,12 +24,14 @@ def user(request, user_id):
 
     friends = Friend.objects.friends(user=other_user)
     videos = Video.objects.filter(author=other_user)
-
+    
     return render(request, 'videochat/user.html', {'user': other_user,
                                                    'friends': friends,
                                                    'same_user': same_user,
-                                                   'videos': videos, })
+                                                   'videos': videos,
+                                                   })
 
+    
 
 def friendship_requests(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)

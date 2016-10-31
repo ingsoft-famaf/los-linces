@@ -5,6 +5,8 @@ from haystack.management.commands import update_index
 from uploader.forms import UploadFileForm
 from videochat.models import Video
 from django import forms
+from website import settings
+from django.contrib.auth.models import User, Permission
 
 
 class ImageUploadForm(forms.Form):
@@ -51,6 +53,6 @@ def upload(request):
 @login_required
 def delete(request, video_id):
     video = Video.objects.get(pk = video_id)
-    #if (user.has_perm('uploader.delete_video'))
-    video.delete()
+    if (user.has_perm('videochat.delete_video')):
+        video.delete()
     return render(request, 'delete.html',{'video': video})
