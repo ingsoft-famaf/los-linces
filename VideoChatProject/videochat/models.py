@@ -17,6 +17,7 @@ class Video(models.Model):
         null='True'
     )
 
+
     def __str__(self):
         title = 'title: ' + str(self.title)
         description = 'description: ' + str(self.description)
@@ -44,13 +45,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-
-def user_permissions():
-    content_type = ContentType.objects.get(app_label='videochat', model='Video')
-    permission = Permission.objects.create(codename='delete_video',
-                                           name='Can Delete Own Videos',
-                                           content_type=content_type)
-    permission.save()
 
 
 class Seen(models.Model):

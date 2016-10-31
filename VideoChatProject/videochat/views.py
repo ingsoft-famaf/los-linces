@@ -41,3 +41,5 @@ def friendship_requests(request, user_id):
                                                                       'friend_requests': friend_requests, })
     else:
         return Http404
+
+

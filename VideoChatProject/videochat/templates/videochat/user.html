@@ -123,23 +123,15 @@
                         function delete_video(pk) {
                             console.log('Delete video');
                             if (confirm("This action is permanently. Are you sure?")) {
-                                var delete_button = document.getElementById(pk);
-                                var delete_classes = delete_button.classList;
-
-                                delete_classes.remove('btn-danger');
-                                delete_classes.add('btn-default');
-
-                                delete_button.innerHTML = "Deleted";
-                                $(delete_button).prop('disabled', true);
-                                delete_button.blur();
 
                                 $.ajax({
                                 type: "POST",
                                 url: "/vc/ajax/delete_video/",
                                 dataType: "json",
-                                data: { "video_pk":pk, "user_pk":pk },
+                                data: { "video_pk":pk, "user_pk": {{ request.user.pk }} },
                                 success: function(data) {
                                     console.log(data.message);
+                                    location.reload();
                                 }
                             });
                             }
