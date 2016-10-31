@@ -16,7 +16,11 @@ def play(request, video_id):
     request.user.profile.save()
     seen = Seen.objects.create(video=video, user=request.user.profile)
     seen.save()
-    last_chat_message = Message.objects.filter(video=video_id).last().pk
+    try:
+        last_chat_message = Message.objects.filter(video=video_id).last().pk
+    except AttributeError:
+        last_chat_message = -1
+
     return render(request, 'videochat/player.html',
                   {'video': video, 'last_chat_message': last_chat_message})
 
