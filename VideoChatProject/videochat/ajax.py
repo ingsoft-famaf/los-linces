@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from friendship.models import FriendshipRequest
+from .models import Video
 
 
 @csrf_exempt
@@ -19,6 +20,21 @@ def delete_friend(request):
     else:
         raise Http404
 
+@csrf_exempt
+def delete_video(request):
+    if request.is_ajax() and request.POST:
+        video = Video.objects.get(pk=request.POST.get('video_pk'))
+        current_user = User.objects.get(pk=request.POST.get('user_pk'))
+
+        if current_user == video.author:
+            video.delete()
+        else:
+            return Http404
+
+        data = {'message': "{} deleted".format(request.POST.get('video_pk'))}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        raise Http404
 
 @csrf_exempt
 def finish_watching(request):

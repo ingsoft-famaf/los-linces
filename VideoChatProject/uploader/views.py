@@ -5,6 +5,8 @@ from haystack.management.commands import update_index
 from uploader.forms import UploadFileForm
 from videochat.models import Video
 from django import forms
+from website import settings
+from django.contrib.auth.models import User, Permission
 
 
 class ImageUploadForm(forms.Form):

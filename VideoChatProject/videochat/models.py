@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from website import settings
 from django.db.models.signals import post_save
@@ -16,6 +16,7 @@ class Video(models.Model):
         on_delete=models.CASCADE,
         null='True'
     )
+
 
     def __str__(self):
         title = 'title: ' + str(self.title)
@@ -52,7 +53,6 @@ class Profile(models.Model):
     videoHistory = models.ManyToManyField(Video, through='Seen')
     currentlyWatching = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images/%Y/%m/%d", default='images/none/default.png')
-
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

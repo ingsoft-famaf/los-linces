@@ -119,6 +119,23 @@
                             });
                             }
                         }
+
+                        function delete_video(pk) {
+                            console.log('Delete video');
+                            if (confirm("This action is permanently. Are you sure?")) {
+
+                                $.ajax({
+                                type: "POST",
+                                url: "/vc/ajax/delete_video/",
+                                dataType: "json",
+                                data: { "video_pk":pk, "user_pk": {{ request.user.pk }} },
+                                success: function(data) {
+                                    console.log(data.message);
+                                    location.reload();
+                                }
+                            });
+                            }
+                        }
                     </script>
 
                 {% with results=friends|get_tuples:6 %}
@@ -176,7 +193,14 @@
 
                                                     <div class="text">
                                                         <p class="buttons">
+
                                                             <a href="{% url 'videochat:v' result.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
+
+                                                        </p>
+                                                        <p class="buttons">
+                                                            
+                                                            <a onclick="delete_video({{ result.pk }})" href="#" class="btn btn-template-transparent-primary"><i class="fa fa-trash-o"></i> Delete</a>
+
                                                         </p>
                                                     </div>
                                                 </div>
