@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from friendship.models import Friend
 from django.http import Http404
+from .ajax import delete_video
 
 import json
 
