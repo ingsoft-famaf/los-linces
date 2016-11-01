@@ -30,7 +30,7 @@ class VideoPlayMethodTest(TestCase):
 		response = v(request, videopk)
 		self.assertEqual(response.status_code,404)
 
-	def _202_test(self):
+	def test_202(self):
 		
 		request_factory = RequestFactory()
 		url = 'http://localhost:8000/play/v/videopk'
