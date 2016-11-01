@@ -9,14 +9,14 @@ from django.dispatch import receiver
 class Video(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=600)
-    path = models.FileField(upload_to="videos/%Y/%m/%d")
+    path = models.FileField(upload_to="videos")
     pub_date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null='True'
     )
-
+    thumbnail = models.ImageField(default="images/none/default_thumbnail.jpg")
 
     def __str__(self):
         title = 'title: ' + str(self.title)
@@ -33,7 +33,7 @@ class Message(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        null = 'True'
+        null='True'
     )
     video = models.ForeignKey(
         Video,
@@ -52,7 +52,8 @@ class Profile(models.Model):
     )
     videoHistory = models.ManyToManyField(Video, through='Seen')
     currentlyWatching = models.BooleanField(default=False)
-    image = models.ImageField(upload_to="images/%Y/%m/%d", default='images/none/default.png')
+    image = models.ImageField(upload_to="images", default='images/none/default_profile.png')
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
