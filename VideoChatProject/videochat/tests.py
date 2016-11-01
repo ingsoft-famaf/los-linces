@@ -1,13 +1,14 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import Client
 
 from friendship.exceptions import AlreadyExistsError, AlreadyFriendsError
 from friendship.models import Friend, Follow, FriendshipRequest
 from django.core.exceptions import ValidationError
 from django.core.cache import cache
+from django.core.files import File
+from django.contrib.staticfiles import finders
 
 '''
 class VideoPlayMethodTest(TestCase):
@@ -40,7 +41,6 @@ class VideoPlayMethodTest(TestCase):
 
 	#def check_template_used():
 '''
-
 class BaseTestCase(TestCase):
 
 	def setUp(self):
@@ -149,3 +149,17 @@ class FriendshipModelTest(BaseTestCase):
 		# Ensure we can't do it manually either
 		with self.assertRaises(ValidationError):
 			Friend.objects.create(to_user=self.user_turco, from_user=self.user_turco)
+
+class VideoTest(BaseTestCase):
+	
+	def test_videoUpload(self):
+		client = Client()
+		# Log into a user's account
+		response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
+		# Check if redirection happens
+		self.assertResponse302(response)
+		# Load testvideo from /static
+		video = finders.find('static/testvideo.mp4')
+		response = client.post('/upload/', {'title':'hola2', 'description':'caca', 'video_file':video})
+		# Check if video was uploaded correctly
+		self.assertResponse200(response)
