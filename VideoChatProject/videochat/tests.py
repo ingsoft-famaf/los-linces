@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from .models import Video
 
 from friendship.exceptions import AlreadyExistsError, AlreadyFriendsError
 from friendship.models import Friend, Follow, FriendshipRequest
@@ -10,37 +11,6 @@ from django.core.cache import cache
 from django.core.files import File
 from django.contrib.staticfiles import finders
 
-'''
-class VideoPlayMethodTest(TestCase):
-
-	def setUp(self):
-		self.video = Video(title= "Primer video", description= "probando", path="/media/videos/2016/10/20/sample4")
-		self.video.save()
-		self.videopk = self.video.pk
-		self.client = Client()
-
-	def test_404(self):
-
-		request_factory = RequestFactory()
-		#user = User.objects.create_user(username="pepita", password="contraseñadificil")
-		#authenticate(username=user.username, password=user.password)
-		self.videopk = self.video.pk + 1
-		url = self.client.get(reverse('videochat: play'))
-		request = request_factory.get(url)
-		response = v(request, videopk)
-		self.assertEqual(response.status_code,404)
-
-	def test_202(self):
-		
-		request_factory = RequestFactory()
-		url = 'http://localhost:8000/play/v/videopk'
-		request = request_factory.get(url)
-		self.videopk = self.video.pk
-		#response = play(request, videopk)
-		self.assertEqual(response.status_code,202)
-
-	#def check_template_used():
-'''
 class BaseTestCase(TestCase):
 
 	def setUp(self):
@@ -152,6 +122,13 @@ class FriendshipModelTest(BaseTestCase):
 
 class VideoTest(BaseTestCase):
 	
+	def test_login(self):
+		client = Client()
+		# Log into a user's account
+		response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
+		# Check if redirection happens
+		self.assertResponse302(response)
+
 	def test_videoUpload(self):
 		client = Client()
 		# Log into a user's account
@@ -163,3 +140,17 @@ class VideoTest(BaseTestCase):
 		response = client.post('/upload/', {'title':'hola2', 'description':'caca', 'video_file':video})
 		# Check if video was uploaded correctly
 		self.assertResponse200(response)
+
+	def test_PlayUnexistingVideo(self):
+		client = Client()
+		video = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+		video.save()
+		videopk = video.pk
+		# Log into a user's account
+		response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
+		# Check if redirection happens
+		self.assertResponse302(response)
+		videopk += 1
+		url = "/play/v/" + str(videopk)
+		response = client.post(url)
+		self.assertResponse404(response)
