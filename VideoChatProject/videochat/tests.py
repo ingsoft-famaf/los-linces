@@ -46,10 +46,9 @@ class BaseTestCase(TestCase):
 
 class FriendshipModelTest(BaseTestCase):
 
-	def test_relationships(self):
-		
+	def test_addFriend(self):
 		# Turco wants to be friends with Juampi
-		req1 = Friend.objects.add_friend(self.user_turco, self.user_juampi)
+		friendRequest = Friend.objects.add_friend(self.user_turco, self.user_juampi)
 		# Let's be sure they don't have any friends
 		self.assertEqual(Friend.objects.friends(self.user_turco), [])
 		self.assertEqual(Friend.objects.friends(self.user_juampi), [])
@@ -70,52 +69,69 @@ class FriendshipModelTest(BaseTestCase):
 		# Let's be sure they aren't friends at this point
 		self.assertFalse(Friend.objects.are_friends(self.user_turco, self.user_juampi))
 		# Accept the request
-		req1.accept()
+		friendRequest.accept()
 		# Ensure neither have pending requests
 		self.assertEqual(FriendshipRequest.objects.filter(from_user=self.user_turco).count(), 0)
 		self.assertEqual(FriendshipRequest.objects.filter(to_user=self.user_juampi).count(), 0)
-		# Ensure both are in each other's friend lists
+		# Ensure both are in each other's friend lists now
 		self.assertEqual(Friend.objects.friends(self.user_turco), [self.user_juampi])
 		self.assertEqual(Friend.objects.friends(self.user_juampi), [self.user_turco])
 		self.assertTrue(Friend.objects.are_friends(self.user_turco, self.user_juampi))
+
+	def test_removeFriend(self):
+
+		# Turco wants to be friends with Juampi
+		friendRequest = Friend.objects.add_friend(self.user_turco, self.user_juampi)
+		# Accept the request
+		friendRequest.accept()
 		# Make sure we can remove friendship
 		self.assertTrue(Friend.objects.remove_friend(self.user_turco, self.user_juampi))
+		# Ensure there's no friendship between them
 		self.assertFalse(Friend.objects.are_friends(self.user_turco, self.user_juampi))
+		# Ensure friends can't be removed when there's no friendship
 		self.assertFalse(Friend.objects.remove_friend(self.user_turco, self.user_juampi))
+
+	def test_cancelFriendRequest(self):
+
 		# Male wants to be friends with Mono, but cancels it
-		req2 = Friend.objects.add_friend(self.user_male, self.user_mono)
+		friendRequest = Friend.objects.add_friend(self.user_male, self.user_mono)
+		# Ensure they're not friends
 		self.assertEqual(Friend.objects.friends(self.user_male), [])
 		self.assertEqual(Friend.objects.friends(self.user_mono), [])
-		req2.cancel()
+		# Cancel the request
+		friendRequest.cancel()
+		# Ensure they are not friends
 		self.assertEqual(Friend.objects.requests(self.user_male), [])
 		self.assertEqual(Friend.objects.requests(self.user_mono), [])
+
+	def test_rejectFriendRequest(self):
+		
 		# Male wants to be friends with Mono, but Mono rejects it
-		req3 = Friend.objects.add_friend(self.user_male, self.user_mono)
+		friendRequest = Friend.objects.add_friend(self.user_male, self.user_mono)
+		# Assert neither of them has friends
 		self.assertEqual(Friend.objects.friends(self.user_male), [])
 		self.assertEqual(Friend.objects.friends(self.user_mono), [])
-		req3.reject()
-		 # Duplicated requests raise a more specific subclass of IntegrityError.
-		with self.assertRaises(AlreadyExistsError):
-			Friend.objects.add_friend(self.user_male, self.user_mono)
-
+		# Reject the request
+		friendRequest.reject()
+		# Ensure they are not friends
 		self.assertFalse(Friend.objects.are_friends(self.user_male, self.user_mono))
-		self.assertEqual(len(Friend.objects.rejected_requests(self.user_mono)), 1)
+		# Mono now has one rejected request
 		self.assertEqual(len(Friend.objects.rejected_requests(self.user_mono)), 1)
 
-		# Let's try again...
-		req3.delete()
+	def test_readFriendRequest(self):
 
 		# Male wants to be friends with Mono, and Mono reads it
-		req4 = Friend.objects.add_friend(self.user_male, self.user_mono)
-		req4.mark_viewed()
-
+		friendRequest = Friend.objects.add_friend(self.user_male, self.user_mono)
+		friendRequest.mark_viewed()
+		# Ensure they are not friends
 		self.assertFalse(Friend.objects.are_friends(self.user_male, self.user_mono))
+		# Mono now has one read request
 		self.assertEqual(len(Friend.objects.read_requests(self.user_mono)), 1)
 
+	def test_yourselfFriendRequest(self):
 		# Ensure we can't be friends with ourselves
 		with self.assertRaises(ValidationError):
 		    Friend.objects.add_friend(self.user_turco, self.user_turco)
-
 		# Ensure we can't do it manually either
 		with self.assertRaises(ValidationError):
 			Friend.objects.create(to_user=self.user_turco, from_user=self.user_turco)
