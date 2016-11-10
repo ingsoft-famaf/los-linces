@@ -51,11 +51,6 @@ class Message(models.Model):
         Chatroom,
         on_delete=models.CASCADE)
 
-    def __str__(self):
-        date_sent = 'Sent on: ' + str(self.date_sent)
-        text = 'Text: ' + str(self.text)
-        return '\n'.join([date_sent, text])
-
 
 class Profile(models.Model):
     user = models.OneToOneField(

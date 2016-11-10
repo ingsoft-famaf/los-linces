@@ -1,29 +1,41 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from friendship.models import Friend
-from django.http import Http404
 from .ajax import delete_video
 
 import json
 
-from .models import Video, Message, Seen
+from .models import Video, Message, Seen, Chatroom
 
 
-def play(request, video_id):
+def play(request, video_id, chatroom_id):
     video = get_object_or_404(Video, pk=video_id)
+    if chatroom_id == None:
+        chatroom = Chatroom.objects.create(
+                state=Chatroom.PLAY_STATE,
+                video=video,
+                )
+        chatroom.save()
+        return redirect(reverse('videochat:v', args=[video_id, chatroom.pk]))
+
+    chatroom = get_object_or_404(Chatroom, pk=chatroom_id)
+    chatroom.users.add(request.user)
     request.user.profile.currentlyWatching = True
     request.user.profile.save()
     seen = Seen.objects.create(video=video, user=request.user.profile)
     seen.save()
-    try:
-        last_chat_message = Message.objects.filter(video=video_id).last().pk
-    except AttributeError:
+    last_message = Message.objects.filter(chatroom=chatroom).last()
+    if last_message is not None:
+        last_chat_message = last_message.pk
+    else:
         last_chat_message = -1
 
     return render(request, 'videochat/player.html',
-                  {'video': video, 'last_chat_message': last_chat_message})
+                  {'video': video, 'last_chat_message': last_chat_message,
+                   'chatroom': chatroom})
 
 
 def user(request, user_id):
@@ -61,7 +73,7 @@ def newchatmessage(request):
         pass
 
     try:
-        video = Video.objects.filter(pk=request.POST.get('videopk')).first()
+        chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroompk'))
     except:
         # Video does not exist
         pass
@@ -69,7 +81,7 @@ def newchatmessage(request):
     message = Message(
         text=request.POST.get('message'),
         author=request.user,
-        video=video,
+        chatroom=chatroom,
         )
     message.save()
 
@@ -79,11 +91,12 @@ def newchatmessage(request):
 @login_required
 def getchatmessages(request):
 
-    videopk = pk=request.GET.get('videopk')
+    chatroompk = pk=request.GET.get('chatroompk')
+
     try:
-        video = Video.objects.filter(videopk).first()
+        chatroom = Chatroom.objects.filter(chatroompk).first()
     except:
-        # Video does not exist
+        # Chatroom does not exist
         pass
 
     response = {}
@@ -93,7 +106,7 @@ def getchatmessages(request):
 
     messages_queryset = Message.objects \
                .filter(pk__gt=last_chat_message) \
-               .filter(video=videopk).order_by('-date_sent')
+               .filter(chatroom=chatroompk).order_by('-date_sent')
 
     if messages_queryset.last() != None:
         response["last_chat_message"] = messages_queryset.last().pk
