@@ -27,6 +27,18 @@ class Video(models.Model):
         return '\n'.join([title, description, path, pub_date])
 
 
+class Chatroom(models.Model):
+    PLAY_STATE = 0
+    PAUSE_STATE = 1
+
+    state = models.CharField(max_length=20)
+    users = models.ManyToManyField(User)
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+        )
+
+
 class Message(models.Model):
     text = models.TextField()
     date_sent = models.DateTimeField(auto_now=True)
@@ -35,8 +47,8 @@ class Message(models.Model):
         on_delete=models.CASCADE,
         null='True'
     )
-    video = models.ForeignKey(
-        Video,
+    chatroom = models.ForeignKey(
+        Chatroom,
         on_delete=models.CASCADE)
 
     def __str__(self):
@@ -70,4 +82,3 @@ class Seen(models.Model):
     video = models.ForeignKey(Video)
     user = models.ForeignKey(Profile)
     started = models.DateTimeField(auto_now_add=True)
-
