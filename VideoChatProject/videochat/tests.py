@@ -2,7 +2,8 @@ from django.test import TestCase, Client
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from .models import Video
+from .models import Video, Profile
+from .models import Seen, Chatroom
 
 from friendship.exceptions import AlreadyExistsError, AlreadyFriendsError
 from friendship.models import Friend, Follow, FriendshipRequest
@@ -170,3 +171,29 @@ class VideoTest(BaseTestCase):
 		url = "/play/v/" + str(videopk)
 		response = client.post(url)
 		self.assertResponse404(response)
+
+class ChatroomTest(BaseTestCase):
+	def setUp(self):
+		self.video = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+		self.video.save()
+	
+	def test_createChatroom(self):
+		client = Client()
+		#video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+		#video1.save()
+		s = Chatroom()
+		s.user = User.objects.create_user(username="pepito", password="holaturco")
+		s.user.save()
+		for item in s.user:
+			s.user.add(item)
+		# Log into a user's account
+		response = client.post('/login/', {'username':'pepito', 'password':'holaturco'})
+		# Check if redirection happens
+		self.assertResponse302(response)
+		
+		chat = Chatroom(state="on", users="s.user")
+
+		
+		
+		
+		
