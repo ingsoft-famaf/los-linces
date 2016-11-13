@@ -173,25 +173,28 @@ class VideoTest(BaseTestCase):
 		self.assertResponse404(response)
 
 class ChatroomTest(BaseTestCase):
-	def setUp(self):
-		self.video = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
-		self.video.save()
 	
 	def test_createChatroom(self):
+		video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+		video1.save()
 		client = Client()
-		#video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
-		#video1.save()
-		s = Chatroom()
-		s.user = User.objects.create_user(username="pepito", password="holaturco")
-		s.user.save()
-		for item in s.user:
-			s.user.add(item)
+		
+		user1 = User.objects.create_user(username="pepitos", password="holaturco")
+		user1.save()
 		# Log into a user's account
-		response = client.post('/login/', {'username':'pepito', 'password':'holaturco'})
+		response = client.post('/login/', {'username':'pepitos', 'password':'holaturco'})
 		# Check if redirection happens
 		self.assertResponse302(response)
+		#user2 = User.objects.create_user(username="pepitas", password="holamale")
+		#user2.save()
+		s = Chatroom.objects.create(state="on", video=video1)
+		s.save()
+		s.users.add(user1)
+	
+		response = client.post('/newchatmessage/', {'state':'on', 'users':'user1', 'video': 'video1'})
+		self.assertResponse200(response)
 		
-		chat = Chatroom(state="on", users="s.user")
+		
 
 		
 		
