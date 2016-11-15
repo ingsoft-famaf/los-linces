@@ -20,6 +20,19 @@
                 }
             });
         });
+
+        function sendEvent(event_type) {
+          if (event_type == 'pause') {
+            $.ajax({
+              type: 'POST',
+              url: "/vc/ajax/handle_event_types/",
+              dataType: "json",
+              data: {'type': event_type},
+              success: function(data) {
+                alert(data.message);
+              }
+          }
+        }
     </script>
     <div class="container text-center">
     <hr>
@@ -28,7 +41,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <section id="reproductor">
-                        <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
+                        <video onpause="sendEvent('pause')" id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
                         <nav>
                             <div id="bar">
                               <div id="progress"></div>

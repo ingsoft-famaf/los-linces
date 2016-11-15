@@ -4,8 +4,20 @@ from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from friendship.models import FriendshipRequest
-from .models import Video
+from .models import Video, Event
 
+@csrf_exempt
+def handle_events(request):
+    if request.is_ajax() and request.POST:
+        event_type = request.POST.get('event_event_type')
+        if event_type == 'pause':
+            event = Event.objects.create(event_type=Event.PAUSE_STATE)
+            event.save()
+                
+            data = {'message': "event {} created".format(event_type)}
+            return HttpResponse(json.dumps(data), content_event_type='application/json') 
+        else:
+            raise Http404
 
 @csrf_exempt
 def delete_friend(request):
