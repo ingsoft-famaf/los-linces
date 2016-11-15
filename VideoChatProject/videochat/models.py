@@ -28,9 +28,6 @@ class Video(models.Model):
 
 
 class Chatroom(models.Model):
-    PLAY_STATE = 0
-    PAUSE_STATE = 1
-
     state = models.CharField(max_length=20)
     users = models.ManyToManyField(User)
     video = models.ForeignKey(
@@ -38,6 +35,16 @@ class Chatroom(models.Model):
         on_delete=models.CASCADE,
         )
 
+class Event(models.Model):
+    PLAY_STATE = 0
+    PAUSE_STATE = 1
+
+    event_type = models.EnumField(PLAY_STATE|PAUSE_STATE)
+    time = models.DateTimeField(auto_now= True)
+    chatroom = models.ForeignKey(
+        Chatroom,
+        on_delete=models.CASCADE,
+        )
 
 class Message(models.Model):
     text = models.TextField()
