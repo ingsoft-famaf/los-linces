@@ -172,32 +172,44 @@ class VideoTest(BaseTestCase):
         response = client.post(url)
         self.assertResponse404(response)
 
-class ChatroomTest(BaseTestCase):
-    
-    def test_createChatroom(self):
-        video = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
-        video.save()
-        videopk = video.pk
-        client = Client()
+class ChatroomTest(TestCase):
+	
+	def setUp(self):
+		self.user_pw = 'test'
+		self.user_turco = User.objects.create_user('turco', 'turco@turco.com', self.user_pw)
+		self.user_mono = User.objects.create_user('mono', 'mono@mono.mono.com', self.user_pw)
+		self.user_male = User.objects.create_user('male', 'male@male.com', self.user_pw)
+		self.client1 = Client()
+		self.client2 = Client()
+		self.client1.login(username='turco', password=self.user_pw)
+		self.client2.login(username='mono', password=self.user_pw)
+		friendRequest = Friend.objects.add_friend(self.user_turco, self.user_mono)
+		friendRequest.accept()
+		self.video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+		self.video1.save()
+		self.chatroomPk = 1
 
-        user1 = User.objects.create_user(username="pepitos", password="holaturco")
-        user1.save()
-        # Log into a user's account
-        response = client.post('/login/', {'username':'pepitos', 'password':'holaturco'})
-        # Check if redirection happens
-        self.assertResponse302(response)
-        #user2 = User.objects.create_user(username="pepitas", password="holamale")
-        #user2.save()
-        chatroom = Chatroom.objects.create(state="on", video=video)
-        chatroom.save()
-        chatroom.users.add(user1)
-        chatroompk = chatroom.pk
-        url = "/play/v" + str(chatroompk)
-        response = client.post(url)
+	def test_createChatroom(self):
+		# Log into a user's account
+		url = reverse('videochat:v', args=[self.video1.pk])
+		response = self.client1.post(url)
+		# Check if redirection happens
+		self.assertEqual(response.status_code, 302)
+		url = reverse('videochat:v', args=[self.video1.pk, self.chatroomPk])
+		self.assertRedirects(response, url)
 
-        self.assertResponse404(response)
-        
-    #def test_enterChatroom(self):
+	def test_enterUnexistingChatroom(self):
+		unexistingChatroomPk = self.chatroomPk + 1
+		url = reverse('videochat:v', args=[self.video1.pk, unexistingChatroomPk])
+		response = self.client.post(url)
+		self.assertEqual(response.status_code, 404)
+
+	def test_enterFriendChatroom(self):
+		url1 = reverse('videochat:v', args=[self.video1.pk])
+		response1 = self.client1.post(url1)
+		url2 = reverse('videochat:v', args=[self.video1.pk, self.chatroomPk])
+		response2 = self.client2.post(url2)
+		self.assertEqual(response2.status_code, 200)
         
         
 
