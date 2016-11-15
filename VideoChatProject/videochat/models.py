@@ -39,8 +39,8 @@ class Event(models.Model):
     PLAY_STATE = 0
     PAUSE_STATE = 1
 
-    event_type = models.EnumField(PLAY_STATE|PAUSE_STATE)
-    time = models.DateTimeField(auto_now= True)
+    event_type = models.IntegerField(default=0)
+    time = models.DateTimeField(auto_now=True)
     chatroom = models.ForeignKey(
         Chatroom,
         on_delete=models.CASCADE,
