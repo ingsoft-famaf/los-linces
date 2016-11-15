@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^ajax/delete_video/$', ajax.delete_video),
 
     url(r'^u/(?P<user_id>[0-9]+)/$', views.user, name='u'),
-    url(r'^v/(?P<video_id>[0-9]+)/$', views.play, name='v'),
+    url(r'^v/(?P<video_id>[0-9]+)(?:/(?P<chatroom_id>[0-9]+))?/$', views.play, name='v'),
 
     url(r'^newchatmessage/$', views.newchatmessage, name='newchatmessage'),
     url(r'^getchatmessages/$', views.getchatmessages, name='getchatmessages'),

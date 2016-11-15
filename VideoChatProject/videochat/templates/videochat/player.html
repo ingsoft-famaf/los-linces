@@ -66,7 +66,7 @@
                                         $.ajax({
                                           url: "/vc/newchatmessage/",
                                           method: "POST",
-                                          data: {'message': message, 'videopk': {{ video.pk }},
+                                          data: {'message': message, 'videopk': {{ video.pk }}, 'chatroompk': {{ chatroom.pk }},
                                                  'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
                                         })
                                       }
@@ -76,7 +76,7 @@
                                       $.ajax({
                                         url: "/vc/getchatmessages/",
                                         method: "GET",
-                                        data: {'videopk': {{ video.pk }},
+                                        data: {'chatroompk': {{ chatroom.pk }},
                                                'last_chat_message': videochat.last_chat_message}
                                       }).done(function(data) {
                                         response = JSON.parse(data);
