@@ -1,40 +1,40 @@
+from functools import wraps
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+
 from friendship.models import Friend
 from .ajax import delete_video
-
-import json
-
 from .models import Video, Message, Seen, Chatroom
 
 
-def play(request, video_id, chatroom_id):
+def create_chatroom_if_not_provided(view_func):
+    def _decorator(request, *args, **kwargs):
+        if kwargs['chatroom_id'] == None:
+            chatroom = Chatroom.objects.create(
+                    state=Chatroom.PLAY_STATE,
+                    video=video,
+                    )
+            return redirect(reverse('videochat:v', args=[video_id, chatroom.pk]))
+        response = view_func(request, *args, **kwargs)
+        return response
+    return wraps(view_func)(_decorator)
+
+
+@create_chatroom_if_not_provided
+def play(request, video_id, chatroom_id=None):
     video = get_object_or_404(Video, pk=video_id)
-    if chatroom_id == None:
-        chatroom = Chatroom.objects.create(
-                state=Chatroom.PLAY_STATE,
-                video=video,
-                )
-        chatroom.save()
-        return redirect(reverse('videochat:v', args=[video_id, chatroom.pk]))
-
     chatroom = get_object_or_404(Chatroom, pk=chatroom_id)
-    chatroom.users.add(request.user)
-    request.user.profile.currentlyWatching = True
-    request.user.profile.save()
-    seen = Seen.objects.create(video=video, user=request.user.profile)
-    seen.save()
-    last_message = Message.objects.filter(chatroom=chatroom).last()
-    if last_message is not None:
-        last_chat_message = last_message.pk
-    else:
-        last_chat_message = -1
 
+    chatroom.users.add(user)
+    video.is_watched_by(request.user)
+    last_message = chatroom.last_message()
     return render(request, 'videochat/player.html',
-                  {'video': video, 'last_chat_message': last_chat_message,
+                  {'video': video, 'last_chat_message': last_message,
                    'chatroom': chatroom})
 
 

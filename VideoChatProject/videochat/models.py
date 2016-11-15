@@ -26,6 +26,12 @@ class Video(models.Model):
 
         return '\n'.join([title, description, path, pub_date])
 
+    def is_watched_by(self, user):
+        user.profile.currentlyWatching = True
+        user.profile.save()
+        seen = Seen.objects.create(video=self, user=user.profile)
+        seen.save()
+
 
 class Chatroom(models.Model):
     state = models.CharField(max_length=20)
@@ -35,11 +41,19 @@ class Chatroom(models.Model):
         on_delete=models.CASCADE,
         )
 
+    def last_message(self):
+        last = self.messages.last()
+        if last is not None:
+            return last.pk
+        else:
+            return -1
+
+
 class Event(models.Model):
     PLAY_STATE = 0
     PAUSE_STATE = 1
 
-    event_type = models.IntegerField(default=0)
+    event_type = models.IntegerField(default=PLAY_STATE)
     time = models.DateTimeField(auto_now=True)
     chatroom = models.ForeignKey(
         Chatroom,
@@ -56,7 +70,8 @@ class Message(models.Model):
     )
     chatroom = models.ForeignKey(
         Chatroom,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name="messages")
 
 
 class Profile(models.Model):

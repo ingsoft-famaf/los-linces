@@ -232,7 +232,7 @@ class ChatroomTest(TestCase):
         Checks if the user2 (Who is not friends with user 1) gets an error 
         while trying to get into user1's chatroom
         '''
-        self.assertEqual(response2.status_code, 404) #TODO: define the status_code
+        self.assertEqual(response2.status_code, 302) 
         
         
 
