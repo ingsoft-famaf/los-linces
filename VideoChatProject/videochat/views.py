@@ -9,17 +9,20 @@ from django.urls import reverse
 
 from friendship.models import Friend
 from .ajax import delete_video
-from .models import Video, Message, Seen, Chatroom
+from .models import Video, Message, Seen, Chatroom, Event
 
 
 def create_chatroom_if_not_provided(view_func):
     def _decorator(request, *args, **kwargs):
         if kwargs['chatroom_id'] == None:
+            video = get_object_or_404(Video, pk=kwargs['video_id'])
             chatroom = Chatroom.objects.create(
-                    state=Chatroom.PLAY_STATE,
                     video=video,
                     )
-            return redirect(reverse('videochat:v', args=[video_id, chatroom.pk]))
+            chatroom.add_pause_event()
+
+            return redirect(reverse('videochat:v',
+                            args=[kwargs['video_id'], chatroom.pk]))
         response = view_func(request, *args, **kwargs)
         return response
     return wraps(view_func)(_decorator)
@@ -30,7 +33,7 @@ def play(request, video_id, chatroom_id=None):
     video = get_object_or_404(Video, pk=video_id)
     chatroom = get_object_or_404(Chatroom, pk=chatroom_id)
 
-    chatroom.users.add(user)
+    chatroom.users.add(request.user)
     video.is_watched_by(request.user)
     last_message = chatroom.last_message()
     return render(request, 'videochat/player.html',
@@ -73,7 +76,7 @@ def newchatmessage(request):
         pass
 
     try:
-        chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroompk'))
+        chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroom_id'))
     except:
         # Video does not exist
         pass
@@ -91,10 +94,10 @@ def newchatmessage(request):
 @login_required
 def getchatmessages(request):
 
-    chatroompk = pk=request.GET.get('chatroompk')
+    chatroom_id = pk=request.GET.get('chatroom_id')
 
     try:
-        chatroom = Chatroom.objects.filter(chatroompk).first()
+        chatroom = Chatroom.objects.filter(chatroom_id).first()
     except:
         # Chatroom does not exist
         pass
@@ -106,7 +109,7 @@ def getchatmessages(request):
 
     messages_queryset = Message.objects \
                .filter(pk__gt=last_chat_message) \
-               .filter(chatroom=chatroompk).order_by('-date_sent')
+               .filter(chatroom=chatroom_id).order_by('-date_sent')
 
     if messages_queryset.last() != None:
         response["last_chat_message"] = messages_queryset.last().pk

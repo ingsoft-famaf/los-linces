@@ -22,15 +22,15 @@
         });
 
         function sendEvent(event_type) {
-          if (event_type == 'pause') {
-            $.ajax({
-              type: 'POST',
-              url: "/vc/ajax/handle_event_types/",
-              dataType: "json",
-              data: {'type': event_type},
-              success: function(data) {
-                alert(data.message);
-              }
+          $.ajax({
+            type: 'POST',
+            url: "/vc/ajax/handle_event_types/",
+            dataType: "json",
+            data: {'type': event_type,
+                   'chatroom_id': videochat.chatroom_id},
+            success: function(data) {
+              alert(data.message);
+            }
           }
         }
     </script>
@@ -41,7 +41,9 @@
             <div class="row">
                 <div class="col-md-8">
                     <section id="reproductor">
-                        <video onpause="sendEvent('pause')" id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
+                        <video onpause="sendEvent('pause')"
+                               onplay="sendEvent('play')"
+                               id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
                         <nav>
                             <div id="bar">
                               <div id="progress"></div>
@@ -69,6 +71,7 @@
                                 <script>
                                 videochat = {};
                                 videochat.last_chat_message = {{ last_chat_message }};
+                                videochat.chatroom_id = {{ chatroom.pk }};
 
                                 $(function() {
                                     $("#chat").on('submit', function(e) {
@@ -79,7 +82,7 @@
                                         $.ajax({
                                           url: "/vc/newchatmessage/",
                                           method: "POST",
-                                          data: {'message': message, 'videopk': {{ video.pk }}, 'chatroompk': {{ chatroom.pk }},
+                                          data: {'message': message, 'videopk': {{ video.pk }}, 'chatroom_id': videochat.chatroom_id,
                                                  'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
                                         })
                                       }
@@ -89,7 +92,7 @@
                                       $.ajax({
                                         url: "/vc/getchatmessages/",
                                         method: "GET",
-                                        data: {'chatroompk': {{ chatroom.pk }},
+                                        data: {'chatroom_id': videochat.chatroom_id,
                                                'last_chat_message': videochat.last_chat_message}
                                       }).done(function(data) {
                                         response = JSON.parse(data);

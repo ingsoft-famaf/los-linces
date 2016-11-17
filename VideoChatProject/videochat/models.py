@@ -34,7 +34,6 @@ class Video(models.Model):
 
 
 class Chatroom(models.Model):
-    state = models.CharField(max_length=20)
     users = models.ManyToManyField(User)
     video = models.ForeignKey(
         Video,
@@ -48,6 +47,43 @@ class Chatroom(models.Model):
         else:
             return -1
 
+    def add_play_event(self):
+        event_type, relative_time = \
+            self.get_last_event_type_and_time()
+
+        if event_type != Event.PLAY_STATE:
+            event = Event.objects.create(
+                    event_type = Event.PLAY_STATE,
+                    relative_time = relative_time,
+                    chatroom = self,
+                    )
+
+    def add_pause_event(self):
+        event_type, relative_time = \
+            self.get_last_event_type_and_time()
+
+        if event_type != Event.PAUSE_STATE:
+            event = Event.objects.create(
+                    event_type = Event.PAUSE_STATE,
+                    relative_time = relative_time,
+                    chatroom = self,
+                    )
+
+    def get_last_event_type_and_time(self):
+        last_event = Event.objects.filter(chatroom=self).last()
+
+        event_type = None
+        relative_time = 0
+        if last_event != None:
+            event_type = last_event.event_type
+            if event_type == Event.PLAY_STATE:
+                # Calculate new relative_time
+                pass
+            elif event_type == Event.PAUSE_STATE:
+                relative_time = last_event.relative_time
+
+        return event_type, relative_time
+
 
 class Event(models.Model):
     PLAY_STATE = 0
@@ -55,6 +91,7 @@ class Event(models.Model):
 
     event_type = models.IntegerField(default=PLAY_STATE)
     time = models.DateTimeField(auto_now=True)
+    relative_time = models.IntegerField()
     chatroom = models.ForeignKey(
         Chatroom,
         on_delete=models.CASCADE,

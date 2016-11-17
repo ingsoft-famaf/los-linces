@@ -10,14 +10,16 @@ from .models import Video, Event
 def handle_events(request):
     if request.is_ajax() and request.POST:
         event_type = request.POST.get('event_event_type')
+        chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroom_id'))
         if event_type == 'pause':
-            event = Event.objects.create(event_type=Event.PAUSE_STATE)
-            event.save()
-                
-            data = {'message': "event {} created".format(event_type)}
-            return HttpResponse(json.dumps(data), content_event_type='application/json') 
+            chatroom.add_pause_event()
+        elif event_type == 'play':
+            chatroom.add_play_event()
         else:
             raise Http404
+
+        data = {'message': "event {} created".format(event_type)}
+        return HttpResponse(json.dumps(data), content_event_type='application/json') 
 
 @csrf_exempt
 def delete_friend(request):

@@ -174,53 +174,53 @@ class VideoTest(BaseTestCase):
 
 class ChatroomTest(TestCase):
 	
-	def setUp(self):
-		self.user_pw = 'test'
-        # Create three users
-		self.user_turco = User.objects.create_user('turco', 'turco@turco.com', self.user_pw)
-		self.user_mono = User.objects.create_user('mono', 'mono@mono.mono.com', self.user_pw)
-		self.user_male = User.objects.create_user('male', 'male@male.com', self.user_pw)
+    def setUp(self):
+        self.user_pw = 'test'
+            # Create three users
+        self.user_turco = User.objects.create_user('turco', 'turco@turco.com', self.user_pw)
+        self.user_mono = User.objects.create_user('mono', 'mono@mono.mono.com', self.user_pw)
+        self.user_male = User.objects.create_user('male', 'male@male.com', self.user_pw)
         # Create three clients
-		self.client1 = Client()
-		self.client2 = Client()
+        self.client1 = Client()
+        self.client2 = Client()
         self.client3 = Client()
         # Login with the three users
-		self.client1.login(username='turco', password=self.user_pw)
-		self.client2.login(username='mono', password=self.user_pw)
+        self.client1.login(username='turco', password=self.user_pw)
+        self.client2.login(username='mono', password=self.user_pw)
         self.client3.login(username='male', password=self.user_pw)
-		# Create a friendship between users turco and mono
+        # Create a friendship between users turco and mono
         friend_request = Friend.objects.add_friend(self.user_turco, self.user_mono)
-		friend_request.accept()
-        # Create a sample video
-		self.video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
-		self.video1.save()
-		self.chatroom_pk= 1
+        friend_request.accept()
+            # Create a sample video
+        self.video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
+        self.video1.save()
+        self.chatroom_pk= 1
 
-	def test_create_chatroom(self):
-		# Log into a user's account
-		url = reverse('videochat:v', args=[self.video1.pk])
-		response = self.client1.post(url)
-		# Check if redirection happens
-		self.assertEqual(response.status_code, 302)
-		url = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
-		self.assertRedirects(response, url)
+    def test_create_chatroom(self):
+        # Log into a user's account
+        url = reverse('videochat:v', args=[self.video1.pk])
+        response = self.client1.post(url)
+        # Check if redirection happens
+        self.assertEqual(response.status_code, 302)
+        url = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
+        self.assertRedirects(response, url)
 
-	def test_enter_unexisting_chatroom(self):
+    def test_enter_unexisting_chatroom(self):
         # Create unexisting chatroom's primary key
-		unexisting_chatroom_pk = self.chatroom_pk + 1
-		url = reverse('videochat:v', args=[self.video1.pk, unexisting_chatroom_pk])
-		response = self.client.post(url)
+        unexisting_chatroom_pk = self.chatroom_pk + 1
+        url = reverse('videochat:v', args=[self.video1.pk, unexisting_chatroom_pk])
+        response = self.client.post(url)
         # Ensure user gets error when connecting to unexisting chatroom
-		self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
-	def test_enter_friend_chatroom(self):
+    def test_enter_friend_chatroom(self):
         # Creates two sessions for two users which are friends
-		url1 = reverse('videochat:v', args=[self.video1.pk])
-		response1 = self.client1.post(url1)
-		url2 = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
-		response2 = self.client2.post(url2)
+        url1 = reverse('videochat:v', args=[self.video1.pk])
+        response1 = self.client1.post(url1)
+        url2 = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
+        response2 = self.client2.post(url2)
         # Checks if user1 can access correctly to user2's chatroom
-		self.assertEqual(response2.status_code, 200)
+        self.assertEqual(response2.status_code, 200)
 
     def test_enter_not_friend_chatroom(self):
         # Creates two sessions for two users which are not friends
@@ -233,7 +233,8 @@ class ChatroomTest(TestCase):
         while trying to get into user1's chatroom
         '''
         self.assertEqual(response2.status_code, 302) 
-        
-        
 
-    
+
+class EventTest():
+    def setUp(self):
+        pass
