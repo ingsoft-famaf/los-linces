@@ -14,8 +14,8 @@ from .models import Video, Message, Seen, Chatroom, Event
 
 def create_chatroom_if_not_provided(view_func):
     def _decorator(request, *args, **kwargs):
+        video = get_object_or_404(Video, pk=kwargs['video_id'])
         if kwargs['chatroom_id'] == None:
-            video = get_object_or_404(Video, pk=kwargs['video_id'])
             chatroom = Chatroom.objects.create(
                     video=video,
                     )
@@ -28,6 +28,7 @@ def create_chatroom_if_not_provided(view_func):
     return wraps(view_func)(_decorator)
 
 
+@login_required
 @create_chatroom_if_not_provided
 def play(request, video_id, chatroom_id=None):
     video = get_object_or_404(Video, pk=video_id)
@@ -41,6 +42,7 @@ def play(request, video_id, chatroom_id=None):
                    'chatroom': chatroom})
 
 
+@login_required
 def user(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
 
@@ -59,6 +61,7 @@ def user(request, user_id):
 
     
 
+@login_required
 def friendship_requests(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
     if request.user == other_user:

@@ -22,6 +22,7 @@ class BaseTestCase(TestCase):
         self.user_juampi = self.create_user('juampi', 'juampi@juampi.com', self.user_pw)
         self.user_male = self.create_user('male', 'male@male.com', self.user_pw)
         self.user_mono = self.create_user('mono', 'mono@mono.mono.com', self.user_pw)
+        self.client = Client()
 
     def tearDown(self):
         cache.clear()
@@ -139,40 +140,20 @@ class FriendshipModelTest(BaseTestCase):
         with self.assertRaises(ValidationError):
             Friend.objects.create(to_user=self.user_turco, from_user=self.user_turco)
 
-class VideoTest(BaseTestCase):
-    
-    def test_login(self):
-        client = Client()
-        # Log into a user's account
-        response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
-        # Check if redirection happens
-        self.assertResponse302(response)
+class VideoTest(TestCase):
 
-    def test_video_upload(self):
-        client = Client()
-        # Log into a user's account
-        response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
-        # Check if redirection happens
-        self.assertResponse302(response)
-        # Load testvideo from /static
-        video = finders.find('static/testvideo.mp4')
-        response = client.post('/upload/', {'title':'hola2', 'description':'caca', 'video_file':video})
-        # Check if video was uploaded correctly
-        self.assertResponse200(response)
+    def setUp(self):
+        self.client = Client()
+        self.username = 'u'
+        self.password = 'p'
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.client.login(username=self.username, password=self.password)
+        self.video = Video.objects.create(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
 
     def test_play_unexisting_video(self):
-        client = Client()
-        video = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
-        video.save()
-        videopk = video.pk
-        # Log into a user's account
-        response = client.post('/login/', {'username':'turco', 'password':self.user_pw})
-        # Check if redirection happens
-        self.assertResponse302(response)
-        videopk += 1
-        url = reverse('videochat:v', args=[video.pk])
-        response = client.get(url)
-        self.assertResponse404(response)
+        url = reverse('videochat:v', args=[self.video.pk + 1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
 class ChatroomTest(TestCase):
 	
