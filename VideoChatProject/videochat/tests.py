@@ -1,9 +1,11 @@
+import re
+
 from django.test import TestCase, Client
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from .models import Video, Profile
-from .models import Seen, Chatroom
+from .models import Seen, Chatroom, Event
 
 from friendship.exceptions import AlreadyExistsError, AlreadyFriendsError
 from friendship.models import Friend, Follow, FriendshipRequest
@@ -169,7 +171,7 @@ class VideoTest(BaseTestCase):
         self.assertResponse302(response)
         videopk += 1
         url = reverse('videochat:v', args=[video.pk])
-        response = client.post(url)
+        response = client.get(url)
         self.assertResponse404(response)
 
 class ChatroomTest(TestCase):
@@ -194,7 +196,7 @@ class ChatroomTest(TestCase):
             # Create a sample video
         self.video1 = Video(title= "Primer video", description= "probando", path="/static/testvideo.mp4")
         self.video1.save()
-        self.chatroom_pk= 1
+        self.chatroom_pk = 1
 
     def test_create_chatroom(self):
         # Log into a user's account
@@ -209,25 +211,25 @@ class ChatroomTest(TestCase):
         # Create unexisting chatroom's primary key
         unexisting_chatroom_pk = self.chatroom_pk + 1
         url = reverse('videochat:v', args=[self.video1.pk, unexisting_chatroom_pk])
-        response = self.client.post(url)
+        response = self.client.get(url)
         # Ensure user gets error when connecting to unexisting chatroom
         self.assertEqual(response.status_code, 404)
 
     def test_enter_friend_chatroom(self):
         # Creates two sessions for two users which are friends
         url1 = reverse('videochat:v', args=[self.video1.pk])
-        response1 = self.client1.post(url1)
+        response1 = self.client1.get(url1)
         url2 = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
-        response2 = self.client2.post(url2)
+        response2 = self.client2.get(url2)
         # Checks if user1 can access correctly to user2's chatroom
         self.assertEqual(response2.status_code, 200)
 
     def test_enter_not_friend_chatroom(self):
         # Creates two sessions for two users which are not friends
         url1 = reverse('videochat:v', args=[self.video1.pk])
-        response1 = self.client1.post(url1)
+        response1 = self.client1.get(url1)
         url2 = reverse('videochat:v', args=[self.video1.pk, self.chatroom_pk])
-        response2 = self.client3.post(url2)
+        response2 = self.client3.get(url2)
         ''' 
         Checks if the user2 (Who is not friends with user 1) gets an error 
         while trying to get into user1's chatroom
@@ -235,6 +237,64 @@ class ChatroomTest(TestCase):
         self.assertEqual(response2.status_code, 302) 
 
 
-class EventTest():
+class EventTest(TestCase):
     def setUp(self):
-        pass
+        username = 'u'
+        password = 'p'
+        self.user = User.objects.create_user(username=username, password=password)
+        self.client = Client()
+        self.client.login(username=username, password=password)
+        self.video = Video.objects.create(title= "Title", description= "Description", path="/static/testvideo.mp4")
+        self.chatroom = Chatroom.objects.create(video=self.video)
+
+
+    def test_chatroom_add_play_event(self):
+        self.chatroom.add_play_event()
+        event = Event.objects.filter(chatroom=self.chatroom).last()
+        self.assertEqual(event.pk, 1)
+        self.assertEqual(event.event_type, event.PLAY_STATE)
+
+    def test_chatroom_add_pause_event(self):
+        self.chatroom.add_pause_event()
+        event = Event.objects.filter(chatroom=self.chatroom).last()
+        self.assertEqual(event.pk, 1)
+        self.assertEqual(event.event_type, event.PAUSE_STATE)
+
+    def test_first_event_created_when_create_chatroom(self):
+        response = self.client.get(reverse('videochat:v', args=[self.video.pk]))
+        chatroom = Chatroom.objects.filter(pk=int(re.search('/([^/])+/$', response.url).group(1))).first()
+        event = Event.objects.filter(chatroom=chatroom).last()
+        self.assertEqual(event.pk, 1)
+        self.assertEqual(event.event_type, event.PAUSE_STATE)
+
+    def test_client_post_ajax_pause_state(self):
+        self.client.post(reverse('videochat:he'), {
+            'event_type': 'pause',
+            'chatroom_id': self.chatroom.pk,
+            },
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        event = Event.objects.filter(chatroom=self.chatroom).last()
+        self.assertEqual(event.pk, 1)
+        self.assertEqual(event.event_type, event.PAUSE_STATE)
+
+    def test_client_post_ajax_play_state(self):
+        response = self.client.post(reverse('videochat:he'), {
+            'event_type': 'play',
+            'chatroom_id': self.chatroom.pk,
+            },
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        event = Event.objects.filter(chatroom=self.chatroom).last()
+        self.assertEqual(event.pk, 1)
+        self.assertEqual(event.event_type, event.PLAY_STATE)
+
+    def test_get_last_event(self):
+        self.chatroom.add_play_event()
+        response = self.client.post(reverse('videochat:gle'), {
+            'chatroom_id': self.chatroom.pk,
+            },
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'event_type')
+        self.assertContains(response, 'relative_time')
+        self.assertContains(response, 'time')

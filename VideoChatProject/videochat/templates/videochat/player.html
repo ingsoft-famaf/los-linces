@@ -26,7 +26,7 @@
             type: 'POST',
             url: "/vc/ajax/handle_event_types/",
             dataType: "json",
-            data: {'type': event_type,
+            data: {'event_type': event_type,
                    'chatroom_id': videochat.chatroom_id},
             success: function(data) {
               alert(data.message);
