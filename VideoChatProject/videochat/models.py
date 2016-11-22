@@ -116,6 +116,9 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+    realName = models.TextField(max_length=100, blank=True)
+    birthDate = models.DateTimeField(null=True, blank=True)
+    bio = models.TextField(max_length=500, blank=True)
     videoHistory = models.ManyToManyField(Video, through='Seen')
     currentlyWatching = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images", default='images/none/default_profile.png')
