@@ -19,7 +19,7 @@
             {% for tuple in results %}
                 <div class="col-md-12">
                     <div class="row">
-                        {% for friend,result in tuple %}
+                        {% for friend, result, chatroom in tuple %}
                             <div class="col-md-3 col-sm-6">
                                 <div class="box-image-text blog">
                                     <div class="top">
@@ -31,7 +31,7 @@
 
                                         <div class="text">
                                             <p class="buttons">
-                                                <a href="{% url 'videochat:v' result.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
+                                                <a href="{% url 'videochat:v' result.pk chatroom.pk %}" class="btn btn-template-transparent-primary"><i class="fa fa-play"></i> Play</a>
                                             </p>
                                         </div>
                                     </div>
