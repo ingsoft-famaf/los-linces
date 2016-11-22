@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import redirect, render, get_object_or_404
 from haystack.management.commands import update_index
-from videochat.models import Seen, Video
+from videochat.models import Seen, Video, Chatroom
 from friendship.models import Friend
 
 
@@ -14,7 +14,9 @@ def index(request):
     for friend in Friend.objects.friends(request.user):
         try:
             if friend.profile.currentlyWatching:
-                videos_being_watched.append((friend, Seen.objects.filter(user__user=friend).order_by('-id')[0].video))
+                video = Seen.objects.filter(user__user=friend).order_by('-id').first().video
+                chatroom = Chatroom.objects.filter(video=video, users__in=[friend]).last()
+                videos_being_watched.append((friend, video, chatroom))
         except IndexError:
             continue
 
