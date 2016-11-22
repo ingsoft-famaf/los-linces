@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User, Permission
 
+from django.utils.dateformat import format
 from website import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import time
 
 class Video(models.Model):
     title = models.CharField(max_length=200)
@@ -77,8 +78,7 @@ class Chatroom(models.Model):
         if last_event != None:
             event_type = last_event.event_type
             if event_type == Event.PLAY_STATE:
-                # Calculate new relative_time
-                pass
+				relative_time = last_event.relative_time + (int(time.time()) - int(format(last_event.time, 'U')))
             elif event_type == Event.PAUSE_STATE:
                 relative_time = last_event.relative_time
 

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.dateformat import format
 
 from friendship.models import Friend, FriendshipRequest
 from .models import Video, Event, Chatroom
@@ -27,8 +28,7 @@ def get_last_event(request):
     event = Event.objects.filter(chatroom=chatroom).last()
     data = {'event_type': event.event_type,
             'relative_time': event.relative_time,
-            # TODO return time as real time string
-            'time': str(event.time),
+            'time': format(event.time, 'U'),
            }
     return HttpResponse(json.dumps(data), content_type='application/json') 
 
