@@ -1,108 +1,181 @@
 {% extends 'base.html' %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static "player.css" %}">
+<link rel="stylesheet" href="{% static "player.css" %}" />
 <script src="{% static "player.js" %}"></script>
 
 {% block title %}video.title{% endblock %}
 
 {% block body_block %}
-    <script>
-        $(window).unload(function(){
-            $.ajax({
-                type: 'POST',
-                url: "/vc/ajax/finish_watching/",
-                async:false, // The browser waits for the request to finish.
-                dataType: "json",
-                data: {'user':{{ request.user.pk }}},
-                success: function(data) {
-                    alert(data.message);
-                }
-            });
-        });
-    </script>
-    <div class="container text-center">
-    <hr>
-    {% load static %}
-        <link href="{% static "/css/chat.css" %}" rel="stylesheet">
-            <div class="row">
-                <div class="col-md-8">
-                    <section id="reproductor">
-                        <video id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
-                        <nav>
-                            <div id="bar">
-                              <div id="progress"></div>
-                            </div>
-                        </nav>
-                    </section>
-                </div>
-                <div class="col-md-4">
-                    <div class="container-fluid">
-                          <div class="panel panel-default">
-                                <div class="panel-heading">Chat</div>
-                                <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
-                                <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
-                                </ul>
-                                <div class="panel-body">
-                                <form id="chat">
-                                    {% csrf_token %}
-                                    <div class="input-group">
-                                    <input type="text" class="form-control" id="chat-input" />
-                                        <span style="padding-left: 1px" class="input-group-btn">
-                                            <button type="submit" class="btn btn-template-main">Send</button>
-                                        </span>
-                                    </div>
-                                </form>
-                                <script>
-                                videochat = {};
-                                videochat.last_chat_message = {{ last_chat_message }};
-
-                                $(function() {
-                                    $("#chat").on('submit', function(e) {
-                                      e.preventDefault();
-                                      message = $("#chat-input").val();
-                                      if (message != "") {
-                                        $("#chat-input").val("");
-                                        $.ajax({
-                                          url: "/vc/newchatmessage/",
-                                          method: "POST",
-                                          data: {'message': message, 'videopk': {{ video.pk }}, 'chatroompk': {{ chatroom.pk }},
-                                                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
-                                        })
-                                      }
-                                    });
-
-                                    function getMessages() {
-                                      $.ajax({
-                                        url: "/vc/getchatmessages/",
-                                        method: "GET",
-                                        data: {'chatroompk': {{ chatroom.pk }},
-                                               'last_chat_message': videochat.last_chat_message}
-                                      }).done(function(data) {
-                                        response = JSON.parse(data);
-                                        for (var i = 0; i < response.messages.length; i++ ) {
-                                          $('#output').append(
-                                            '<li class="list-group-item"><strong>' +
-                                            response.messages[i]['author'] +
-                                            ':</strong><span class="text">  ' +
-                                            response.messages[i]['text'] + '</span></li>');
-                                          $("#output").scrollTop($("#output").prop("scrollHeight"));
-                                        }
-                                        videochat.last_chat_message = response.last_chat_message;
-                                      });
-
-                                      setTimeout(getMessages, 1000);
-                                    }
-
-                                    getMessages();
-
-                                  });
-                                  </script>
-                                  </div>
-                            </div>
-                      </div>
-                  </div>
-              </div>
-
+  <div class="container text-center">
+  <hr>
+  {% load static %}
+    <link href="{% static "/css/chat.css" %}" rel="stylesheet" />
+    <div class="row">
+      <div class="col-md-8">
+        <section id="reproductor">
+          <video onpause="sendEvent('pause')"
+               onplay="sendEvent('play')"
+               id="video" width="700" heigth="500" src ="{{ video.path.url }}" controls></video>
+          <nav>
+            <div id="bar">
+              <div id="progress"></div>
+            </div>
+          </nav>
+        </section>
       </div>
+      <div class="col-md-4">
+        <div class="container-fluid">
+            <div class="panel panel-default">
+              <div class="panel-heading">Chat</div>
+              <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
+              <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
+              </ul>
+              <div class="panel-body">
+              <form id="chat">
+                {% csrf_token %}
+                <div class="input-group">
+                <input type="text" class="form-control" id="chat-input" />
+                  <span style="padding-left: 1px" class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main">Send</button>
+                  </span>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  {% endblock %}
+
+  {% block scripts_block %}
+    <script>
+      $(window).unload(function() {
+        $.ajax({
+          type: 'POST',
+          url: "/vc/ajax/finish_watching/",
+          async:false, // The browser waits for the request to finish.
+          dataType: "json",
+          data: {'user':{{ request.user.pk }}},
+          success: function(data) {
+            alert(data.message);
+          }
+        });
+      });
+
+    </script>
+
+    <script>
+			first_time = true;	
+      videochat = {};
+      videochat.chatroom_id = {{ chatroom.pk }};
+
+      videochat.chat = {};
+      videochat.chat.last_chat_message = {{ last_chat_message }};
+
+      function playerPlay() {
+        $('#video')[0].play();
+      }
+
+      function playerPause() {
+        $('#video')[0].pause();
+      }
+
+      videochat.player = {};
+      videochat.player.PLAY_STATE = 0;
+      videochat.player.PAUSE_STATE = 1;
+      videochat.player.last_state = videochat.player.PAUSE_STATE;
+      videochat.player.exec = {};
+      videochat.player.exec[videochat.player.PLAY_STATE] = playerPlay;
+      videochat.player.exec[videochat.player.PAUSE_STATE] = playerPause;
+
+      function sendEvent(event_type) {
+        $.ajax({
+          type: 'POST',
+          url: "/vc/ajax/handle_events/",
+          dataType: "json",
+          data: {'event_type': event_type,
+                 'chatroom_id': videochat.chatroom_id},
+          success: function(data) {
+          }
+        });
+      }
+
+      $(function() {
+        $("#chat").on('submit', function(e) {
+          e.preventDefault();
+          message = $("#chat-input").val();
+          if (message != "") {
+            $("#chat-input").val("");
+            $.ajax({
+              url: "/vc/newchatmessage/",
+              method: "POST",
+              data: {'message': message, 'videopk': {{ video.pk }}, 'chatroom_id': videochat.chatroom_id,
+                     'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()}
+            });
+          }
+        });
+
+        function getMessages() {
+          $.ajax({
+            url: "/vc/getchatmessages/",
+            method: "GET",
+            data: {'chatroom_id': videochat.chatroom_id,
+                   'last_chat_message': videochat.chat.last_chat_message }
+          }).done(function(data) {
+            response = JSON.parse(data);
+            for (var i = 0; i < response.messages.length; i++ ) {
+              $('#output').append(
+                '<li class="list-group-item"><strong>' +
+                response.messages[i]['author'] +
+                ':</strong><span class="text">  ' +
+                response.messages[i]['text'] + '</span></li>');
+              $("#output").scrollTop($("#output").prop("scrollHeight"));
+            }
+            videochat.chat.last_chat_message = response.last_chat_message;
+          });
+
+          setTimeout(getMessages, 1000);
+        }
+
+        getMessages();
+
+        function getLastEvent() {
+          $.ajax({
+            type: 'POST',
+            url: "/vc/ajax/get_last_event/",
+            dataType: "json",
+            data: {'chatroom_id': videochat.chatroom_id},
+            success: function(data) {
+              console.log(data);
+              last_event = data;
+              if (first_time) {
+                first_time = false;
+                var vid = document.getElementById("video");
+                new_time_position = 0;
+                
+                if (last_event.event_type == videochat.player.PLAY_STATE) {
+                  new_time_position += ((new Date).getTime() - last_event.time);
+                }
+
+                new_time_position += last_event.relative_time;
+                console.log(new_time_position);
+                vid.currentTime = new_time_position;
+              } 
+              if (last_event.event_type != videochat.player.last_state) {
+                videochat.player.last_state = last_event.event_type;
+                videochat.player.exec[last_event.event_type]();
+              }
+            }
+          });
+
+          setTimeout(getLastEvent, 500);
+        }
+
+        getLastEvent();
+
+      });
+    </script>
   {% endblock %}
