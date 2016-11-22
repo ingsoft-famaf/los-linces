@@ -78,7 +78,7 @@ class Chatroom(models.Model):
         if last_event != None:
             event_type = last_event.event_type
             if event_type == Event.PLAY_STATE:
-				relative_time = last_event.relative_time + (int(time.time()) - int(format(last_event.time, 'U')))
+                relative_time = last_event.relative_time + (int(time.time()) - int(format(last_event.time, 'U')))
             elif event_type == Event.PAUSE_STATE:
                 relative_time = last_event.relative_time
 
