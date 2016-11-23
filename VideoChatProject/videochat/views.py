@@ -78,14 +78,10 @@ def newchatmessage(request):
         # Return HttpResponse with error
         pass
 
-    try:
-        chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroom_id'))
-    except:
-        # Video does not exist
-        pass
+    chatroom = get_object_or_404(Chatroom, pk=request.POST.get('chatroom_id'))
 
     message = Message(
-        text=request.POST.get('message'),
+        text=clean_text(text=request.POST.get('message')),
         author=request.user,
         chatroom=chatroom,
         )
@@ -93,36 +89,31 @@ def newchatmessage(request):
 
     return HttpResponse(request.POST.get('message'))
 
+def clean_text(text):
+    return text.replace("<", "&lt").replace(">", "&gt")
 
 @login_required
 def getchatmessages(request):
 
-    chatroom_id = pk=request.GET.get('chatroom_id')
-
-    try:
-        chatroom = Chatroom.objects.filter(chatroom_id).first()
-    except:
-        # Chatroom does not exist
-        pass
+    chatroom = get_object_or_404(Chatroom, pk=request.GET.get('chatroom_id'))
+    last_chat_message = request.GET.get('last_chat_message')
 
     response = {}
 
-    last_chat_message = request.GET.get('last_chat_message')
-    response["last_chat_message"] = last_chat_message
-
-    messages_queryset = Message.objects \
+    messages = Message.objects \
                .filter(pk__gt=last_chat_message) \
-               .filter(chatroom=chatroom_id).order_by('-date_sent')
+               .filter(chatroom=chatroom).order_by('-date_sent') \
+               .all()
 
-    if messages_queryset.last() != None:
-        response["last_chat_message"] = messages_queryset.last().pk
+    if messages.last() != None:
+        last_chat_message = messages.last().pk
 
-    messages = messages_queryset.all()
-    response["messages"] = []
-    for m in messages:
-        response["messages"].append({
-                'text': m.text,
-                'author': m.author.username,
-               })
+    response["last_chat_message"] = last_chat_message
+    response["messages"] = [
+        {
+        'text': m.text,
+        'author': m.author.username
+        }
+        for m in messages]
         
     return HttpResponse(json.dumps(response))
