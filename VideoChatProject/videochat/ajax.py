@@ -42,6 +42,8 @@ def handle_events(request):
         chatroom.add_pause_event()
     elif event_type == 'play':
         chatroom.add_play_event()
+    elif event_type == 'change_video':
+        chatroom.add_change_video_event(request.POST.get('new_video_src'))
     else:
         return Http404
 

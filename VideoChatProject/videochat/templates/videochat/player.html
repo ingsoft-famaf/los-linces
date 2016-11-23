@@ -46,7 +46,16 @@
           </div>
         </div>
       </div>
-
+        
+        <div id="search-outer"  class="hidden-xs hidden-sm">
+            <form id="search-form" role="search" method="get" action="/search/">
+               <select class="search-select" name="models">
+                  <option value="videochat.video">Video</option>
+                </select>
+                <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
     </div>
   {% endblock %}
 
@@ -68,10 +77,10 @@
     </script>
 
     <script>
-			first_time = true;	
+      first_time = true;
       videochat = {};
       videochat.chatroom_id = {{ chatroom.pk }};
-
+      video_src = $('#video')[0].currentSrc();
       videochat.chat = {};
       videochat.chat.last_chat_message = {{ last_chat_message }};
 
@@ -83,21 +92,30 @@
         $('#video')[0].pause();
       }
 
+      function playerChangeVideo() {
+        $('#video')[0].src = video_src;
+      }
+
       videochat.player = {};
+
       videochat.player.PLAY_STATE = 0;
       videochat.player.PAUSE_STATE = 1;
+      videochat.player.CHANGE_VIDEO_STATE = 2;
+
       videochat.player.last_state = videochat.player.PAUSE_STATE;
+
       videochat.player.exec = {};
       videochat.player.exec[videochat.player.PLAY_STATE] = playerPlay;
       videochat.player.exec[videochat.player.PAUSE_STATE] = playerPause;
+      videochat.player.exec[videochat.player.CHANGE_VIDEO_STATE] = playerChangeVideo;
 
-      function sendEvent(event_type) {
+      function sendEvent(event_type, new_video_src = null) {
         $.ajax({
           type: 'POST',
           url: "/vc/ajax/handle_events/",
           dataType: "json",
-          data: {'event_type': event_type,
-                 'chatroom_id': videochat.chatroom_id},
+                 'chatroom_id': videochat.chatroom_id,
+                 'new_video_src': new_video_src}
           success: function(data) {
           }
         });
