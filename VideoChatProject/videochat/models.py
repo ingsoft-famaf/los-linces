@@ -57,18 +57,27 @@ class Chatroom(models.Model):
                     event_type = Event.PLAY_STATE,
                     relative_time = relative_time,
                     chatroom = self,
+                    video_src = str(self.video.path)
                     )
 
     def add_pause_event(self):
         event_type, relative_time = \
             self.get_last_event_type_and_time()
-
         if event_type != Event.PAUSE_STATE:
             event = Event.objects.create(
                     event_type = Event.PAUSE_STATE,
                     relative_time = relative_time,
                     chatroom = self,
+                    video_src = str(self.video.path)
                     )
+
+    def add_change_video_event(self, new_video_src):
+        event = Event.objects.create(
+            event_type = Event.CHANGE_VIDEO_STATE,
+            relative_time = 0,
+            chatroom = self,
+            video_src = new_video_src,
+            )
 
     def get_last_event_type_and_time(self):
         last_event = Event.objects.filter(chatroom=self).last()
@@ -88,6 +97,7 @@ class Chatroom(models.Model):
 class Event(models.Model):
     PLAY_STATE = 0
     PAUSE_STATE = 1
+    CHANGE_VIDEO_STATE = 2
 
     event_type = models.IntegerField(default=PLAY_STATE)
     time = models.DateTimeField(auto_now=True)
@@ -96,6 +106,7 @@ class Event(models.Model):
         Chatroom,
         on_delete=models.CASCADE,
         )
+    video_src = models.CharField(max_length=200, default=None)
 
 class Message(models.Model):
     text = models.TextField()

@@ -31,6 +31,8 @@ def create_chatroom_if_not_provided(view_func):
 @login_required
 @create_chatroom_if_not_provided
 def play(request, video_id, chatroom_id=None):
+    videos = Video.objects.all();
+
     video = get_object_or_404(Video, pk=video_id)
     chatroom = get_object_or_404(Chatroom, pk=chatroom_id)
 
@@ -39,7 +41,8 @@ def play(request, video_id, chatroom_id=None):
     last_message = chatroom.last_message()
     return render(request, 'videochat/player.html',
                   {'video': video, 'last_chat_message': last_message,
-                   'chatroom': chatroom})
+                   'chatroom': chatroom,
+                   'videos': videos})
 
 
 @login_required

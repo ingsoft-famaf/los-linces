@@ -25,53 +25,40 @@
         </section>
       </div>
       <div class="col-md-4">
-            <div class="container-fluid">
-                <h4> Change video </h4>
-                <select id=changeVideoSelect>
-                    {% for video in videos %}
-                        <option value={{ video.path }}> {{ video.title }} </option>
-                    {% endfor %}
-                </select>
-                    <button onclick="sendEvent('change_video', getSelected())"> Change </button>
-                <br></br>
-                <div class="panel panel-default">
-                  <div class="panel-heading">Chat</div>
-                  <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
-                  <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
-                  </ul>
-                  <div class="panel-body">
-                  <form id="chat">
-                    {% csrf_token %}
-                    <div class="input-group">
-                    <input type="text" class="form-control" id="chat-input" />
-                      <span style="padding-left: 1px" class="input-group-btn">
-                        <button type="submit" class="btn btn-template-main">Send</button>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
+        <div id="search-outer"  class="hidden-xs hidden-sm">
+            <form id="search-form" role="search" method="get" action="/search/">
+                <input type='hidden' name='models' value="videochat.video">
+                <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+              <div class="panel-heading">Chat</div>
+              <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
+              <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
+              </ul>
+              <div class="panel-body">
+              <form id="chat">
+                {% csrf_token %}
+                <div class="input-group">
+                <input type="text" class="form-control" id="chat-input" />
+                  <span style="padding-left: 1px" class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main">Send</button>
+                  </span>
                 </div>
+              </form>
               </div>
             </div>
+          </div>
+        </div>
       </div>
         
     </div>
   {% endblock %}
 
   {% block scripts_block %}
-      <script>
-          function getSelected() {
-              var e = document.getElementById("changeVideoSelect");
-              return(e.options[e.selectedIndex].value);
-            
-          }
-          var form = document.getElementById('changeVideoForm');
-          form.onsubmit = function() {
-                  var w = window.open('about:blank','Popup_Window','toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=400,height=300,left = 312,top = 234');
-                      this.target = 'Popup_Window';
-          };
-      </script>
-      <script>
+    <script>
       $(window).unload(function() {
         $.ajax({
           type: 'POST',
@@ -104,8 +91,6 @@
       }
 
       function playerChangeVideo() {
-        console.log("CHANGE VIDEO");
-        console.log(video_src);
         $('#video')[0].src = video_src;
       }
 
@@ -196,14 +181,9 @@
                 console.log(new_time_position);
                 vid.currentTime = new_time_position;
               } 
-              if (last_event.event_type != videochat.player.last_state && last_event.event_type != videochat.player.CHANGE_VIDEO_STATE) {
+              if (last_event.event_type != videochat.player.last_state) {
                 videochat.player.last_state = last_event.event_type;
                 videochat.player.exec[last_event.event_type]();
-              }
-              if (last_event.event_type == videochat.player.CHANGE_VIDEO_STATE && "/media/" + last_event.src != video_src) {
-                  videochat.player.last_state = last_event.event_type;
-                  video_src = "/media/" + last_event.src;        
-                  videochat.player.exec[last_event.event_type]();
               }
             }
           });

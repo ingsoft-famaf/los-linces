@@ -17,7 +17,7 @@ def check_if_ajax(view_func):
             response = view_func(request, *args, **kwargs)
             return response
         else:
-            return Http404
+            raise Http404
     return wraps(view_func)(_decorator)
 
 
@@ -29,6 +29,7 @@ def get_last_event(request):
     data = {'event_type': event.event_type,
             'relative_time': event.relative_time,
             'time': format(event.time, 'U'),
+            'src': event.video_src
            }
     return HttpResponse(json.dumps(data), content_type='application/json') 
 
@@ -42,8 +43,10 @@ def handle_events(request):
         chatroom.add_pause_event()
     elif event_type == 'play':
         chatroom.add_play_event()
+    elif event_type == 'change_video':
+        chatroom.add_change_video_event(request.POST.get('new_video_src'))
     else:
-        return Http404
+        raise Http404
 
     data = {'message': "event {} created".format(event_type)}
     return HttpResponse(json.dumps(data), content_type='application/json') 
