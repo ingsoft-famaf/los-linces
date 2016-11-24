@@ -6,7 +6,7 @@
     <div class="container">
         <form action="{% url 'register_view' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-                {% for field in form %}
+                
                     <h4>{{ field.label_tag }}</h4>
                     <h4>{{ field }}</h4>
                     {% if field.errors %}

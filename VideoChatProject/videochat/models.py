@@ -117,8 +117,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
     )
     realName = models.TextField(max_length=100, blank=True)
-    birthDate = models.DateTimeField(null=True, blank=True)
-    bio = models.TextField(max_length=500, blank=True)
+    email = models.EmailField(unique=True, blank=False)
     videoHistory = models.ManyToManyField(Video, through='Seen')
     currentlyWatching = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images", default='images/none/default_profile.png')
@@ -128,7 +127,6 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
