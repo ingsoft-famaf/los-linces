@@ -181,7 +181,6 @@
             dataType: "json",
             data: {'chatroom_id': videochat.chatroom_id},
             success: function(data) {
-              console.log(data);
               last_event = data;
               if (first_time) {
                 first_time = false;
@@ -189,11 +188,10 @@
                 new_time_position = 0;
                 
                 if (last_event.event_type == videochat.player.PLAY_STATE) {
-                  new_time_position += ((new Date).getTime() - last_event.time);
+                  new_time_position += ((new Date).getTime() / 1000 - last_event.time);
                 }
 
                 new_time_position += last_event.relative_time;
-                console.log(new_time_position);
                 vid.currentTime = new_time_position;
               } 
               if (last_event.event_type != videochat.player.last_state && last_event.event_type != videochat.player.CHANGE_VIDEO_STATE) {
