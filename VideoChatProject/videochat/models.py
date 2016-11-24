@@ -57,17 +57,18 @@ class Chatroom(models.Model):
                     event_type = Event.PLAY_STATE,
                     relative_time = relative_time,
                     chatroom = self,
+                    video_src = str(self.video.path)
                     )
 
     def add_pause_event(self):
         event_type, relative_time = \
             self.get_last_event_type_and_time()
-
         if event_type != Event.PAUSE_STATE:
             event = Event.objects.create(
                     event_type = Event.PAUSE_STATE,
                     relative_time = relative_time,
                     chatroom = self,
+                    video_src = str(self.video.path)
                     )
 
     def add_change_video_event(self, new_video_src):

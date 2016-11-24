@@ -80,7 +80,7 @@
       first_time = true;
       videochat = {};
       videochat.chatroom_id = {{ chatroom.pk }};
-      video_src = $('#video')[0].currentSrc();
+      video_src = $('#video')[0].currentSrc;
       videochat.chat = {};
       videochat.chat.last_chat_message = {{ last_chat_message }};
 
@@ -114,8 +114,9 @@
           type: 'POST',
           url: "/vc/ajax/handle_events/",
           dataType: "json",
-                 'chatroom_id': videochat.chatroom_id,
-                 'new_video_src': new_video_src}
+          data: {'chatroom_id': videochat.chatroom_id,
+                 'event_type': event_type,
+                 'new_video_src': new_video_src},
           success: function(data) {
           }
         });
