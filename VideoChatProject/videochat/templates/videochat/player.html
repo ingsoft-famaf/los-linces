@@ -49,9 +49,7 @@
         
         <div id="search-outer"  class="hidden-xs hidden-sm">
             <form id="search-form" role="search" method="get" action="/search/">
-               <select class="search-select" name="models">
-                  <option value="videochat.video">Video</option>
-                </select>
+                <input type='hidden' name='models' value="videochat.video">
                 <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
                 <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
             </form>
