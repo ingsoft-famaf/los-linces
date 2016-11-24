@@ -29,6 +29,7 @@ def get_last_event(request):
     data = {'event_type': event.event_type,
             'relative_time': event.relative_time,
             'time': format(event.time, 'U'),
+            'src': event.video_src
            }
     return HttpResponse(json.dumps(data), content_type='application/json') 
 
