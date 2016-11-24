@@ -25,33 +25,33 @@
         </section>
       </div>
       <div class="col-md-4">
-            <div class="container-fluid">
-                <h4> Change video </h4>
-                <form id="search-form" role="search" method="get" action="/search/">
-                    <input type='hidden' name='models' value="videochat.video">
-                    <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
-                    <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
-                </form>
-                <br></br>
-                <div class="panel panel-default">
-                  <div class="panel-heading">Chat</div>
-                  <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
-                  <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
-                  </ul>
-                  <div class="panel-body">
-                  <form id="chat">
-                    {% csrf_token %}
-                    <div class="input-group">
-                    <input type="text" class="form-control" id="chat-input" />
-                      <span style="padding-left: 1px" class="input-group-btn">
-                        <button type="submit" class="btn btn-template-main">Send</button>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
+        <div id="search-outer"  class="hidden-xs hidden-sm">
+            <form id="search-form" role="search" method="get" action="/search/">
+                <input type='hidden' name='models' value="videochat.video">
+                <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
+                <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+              <div class="panel-heading">Chat</div>
+              <!-- Reference: http://v4-alpha.getbootstrap.com/components/list-group/ -->
+              <ul class="list-group" id="output" style="text-align: left; max-height: 200px">
+              </ul>
+              <div class="panel-body">
+              <form id="chat">
+                {% csrf_token %}
+                <div class="input-group">
+                <input type="text" class="form-control" id="chat-input" />
+                  <span style="padding-left: 1px" class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main">Send</button>
+                  </span>
                 </div>
+              </form>
               </div>
             </div>
+          </div>
+        </div>
       </div>
         
     </div>
