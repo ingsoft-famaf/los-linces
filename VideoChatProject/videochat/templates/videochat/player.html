@@ -27,7 +27,7 @@
       <div class="col-md-4">
             <div class="container-fluid">
                 <h4> Change video </h4>
-                <form id="search-form" role="search" method="get" action="/search/">
+                <form id="changeVideoForm" role="search" method="get" action="/search/">
                     <input type='hidden' name='models' value="videochat.video">
                     <input id="search-input" type="text" class="form-control search-input" placeholder="Search" name="q">
                     <button id="search-submit"  type="submit" class="search-button btn btn-template-main btn-search"><i class="fa fa-search"></i></button>
@@ -58,7 +58,14 @@
   {% endblock %}
 
   {% block scripts_block %}
-    <script>
+      <script>
+          var form = document.getElementById('changeVideoForm');
+          form.onsubmit = function() {
+                  var w = window.open('about:blank','Popup_Window','toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=400,height=300,left = 312,top = 234');
+                      this.target = 'Popup_Window';
+          };
+      </script>
+      <script>
       $(window).unload(function() {
         $.ajax({
           type: 'POST',
